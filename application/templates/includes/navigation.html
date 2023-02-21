@@ -1,0 +1,139 @@
+<!-- Added style -->
+<style>
+    @media screen and (max-width: 600px) {
+        .new {
+            flex: 1.2 !important;
+        }
+    }
+
+    .new {
+        flex: 0 !important;
+    }
+
+    .shine {
+        animation-name: animation1;
+        animation-duration: 0.5s !important;
+    }
+
+    @keyframes animation1 {
+        0% {
+            background: rgba(255, 255, 255, 1);
+            scale: 1;
+        }
+        25% {
+            background: rgba(255, 255, 255, 0.75);
+            scale: 1.25;
+        }
+        50% {
+            background: rgba(255, 255, 255, 0.5);
+            scale: 1.5;
+        }
+        75% {
+            background: rgba(255, 255, 255, 0.25);
+            scale: 1.25;
+        }
+        100% {
+            background: rgba(255, 255, 255, 0);
+            scale: 1;
+        }
+    }
+
+    .mouseover {
+        animation-name: animation2;
+        animation-duration: 0.5s !important;
+        scale: 1.375;
+        background-color: rgba(255, 255, 255, 1) !important;
+    }
+
+    @keyframes animation2 {
+        0% {
+            scale: 1
+        }
+        33% {
+            scale: 1.125
+        }
+        66% {
+            scale: 1.25
+        }
+        100% {
+            scale: 1.375
+        }
+    }
+
+    .mouseout {
+        animation-name: animation3;
+        animation-duration: 0.5s !important;
+        scale: 1;
+    }
+
+    @keyframes animation3 {
+        0% {
+            scale: 1.375
+        }
+        33% {
+            scale: 1.25
+        }
+        66% {
+            scale: 1.125
+        }
+        100% {
+            scale: 1
+        }
+    }
+</style>
+
+<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl bg-gradient-dark mt-3"
+     id="navbarBlur" navbar-scroll="true">
+    <div class="container-fluid py-1 px-3 row" id="nav-row">
+        <div class="col">
+
+            <!-- Added in-line style -->
+            <li class="collapse navbar-collapse mt-sm-0 mt-2 px-0" id="navbar" style="float: left;">
+                <ul class="navbar-nav me-0 ms-auto justify-content-end">
+
+                    <!-- Removed class "d-xl-none" from <li>-->
+                    <li class="nav-item pe-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                            <div class="sidenav-toggler-inner">
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                            </div>
+                        </a>
+                    </li>
+
+                    <!-- Removed the list(logout button) -->
+                </ul>
+            </li>
+        </div>
+
+        <!-- Added class "new" -->
+        <div class="col new">
+            <a class="navbar-brand m-0 p-0" href="/index">
+                <img src="/static/assets/img/NAO-logo.svg" class="navbar-brand-img" alt="main_logo">
+            </a>
+        </div>
+        <div class="col d-flex justify-content-end">
+            <!--            <li class="nav-item pe-3 d-flex align-items-center justify-content-center dropdown">-->
+            <button class="btn m-0 py-1 px-2 logout-btn">
+                <a class="fa fa-user fs-6" href="{{ url_for('auth_blueprint.logout') }}"> Logout</a>
+            </button>
+            <!--            </li>-->
+        </div>
+    </div>
+</nav>
+
+<!-- Added this function -->
+<script>
+    $(document).ready(function () {
+        window.setTimeout(function () {
+            $('#iconNavbarSidenav > div > i').addClass('shine');
+        }, 0);
+        $('.sidenav-toggler-inner').mouseover(function () {
+            $('.sidenav-toggler-line').addClass('mouseover').removeClass('mouseout');
+        });
+        $('.sidenav-toggler-inner').mouseleave(function () {
+            $('.sidenav-toggler-line').removeClass('mouseover').addClass('mouseout');
+        });
+    })
+</script>

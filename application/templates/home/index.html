@@ -1,0 +1,3371 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Employee Information Audit {% endblock %}
+
+{% block content %}
+<!--######################################################################################-->
+<!--################################Alert Messages #######################################-->
+<!--######################################################################################-->
+
+{% if missing_list=="exists" %}
+<div class="alert alert-dismissible" style="background-color:#fff3cd; color:#856404;" role="alert"
+     xmlns="http://www.w3.org/1999/html">
+    {% if missing_columns %}
+    <span><b>The sheet names {{missing_columns}} in uploaded payroll file exists already!</b></span>
+    {% endif %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% elif missing_list == "MissingColumnsPayroll"%}
+<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    There is a missing columns in payroll file:
+    {% for value in missing_columns %}
+    <span><b> {{missing_columns[(loop.index)-1]}} </b></span>
+    in sheet {{recevied_list}}
+    {% endfor %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+{% if recevied_list == 'MissingColumnsPayroll' %}
+<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    There is a missing columns in payroll file:
+    {% for val in val2 %}
+    <span><b> {{val2[(loop.index)-1]}} </b></span>
+    in sheet {{val3}}
+    {% endfor %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+{% if missing_columns=="exists" %}
+<div class="alert alert-dismissible" style="background-color:#fff3cd; color:#856404;" role="alert">
+    {% if missing_columns %}
+    <span><b>The sheet names {{conflict_list}} in uploaded payroll file exists already!</b></span>
+    {% endif %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% elif  missing_columns== "MissingColumnsPayroll"%}
+<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    There is a missing columns in payroll file:
+    {% for value in received_value %}
+    <span><b> {{value[(loop.index)-1]}} </b></span>
+    in sheet {{conflict_list}}
+    {% endfor %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+{% if val2 and val3 and received_value == "MissingColumnsPayroll" %}
+<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    There is a missing columns in payroll file:
+    {% for val in val2 %}
+    <span><b> {{val[(loop.index)-1]}} </b></span>
+    in sheet {{val3}}
+    {% endfor %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+
+<!--    Message if the file already uploaded before (overtime payroll format)-->
+{% if RecivedMessage=="exists" %}
+<div class="alert alert-dismissible" style="background-color:#fff3cd; color:#856404;" role="alert">
+    {% if sucess_sheet and missing_columns %}
+    <span><b>The sheet names {{sucess_sheet}} in uploaded payroll file exists already!</b></span>
+    {% elif missing_columns %}
+    <span><b>The sheet names {{missing_columns}} in uploaded payroll file exists already!</b></span>
+    {% else %}
+    <span><b>This file {{conflict_list}} exists already!</b></span>
+    {% endif %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% elif  RecivedMessage=="success" %}
+<div class="alert alert-dismissible" style="background-color:#d4edda; color:#155724; " role="alert">
+    {% if sucess_sheet%}
+    <span><b>File {{sucess_sheet}} uploaded Successfuly!</b></span>
+    {% else%}
+    <span><b>File uploaded Successfuly!</b></span>
+
+    {% endif %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% elif  RecivedMessage=="incorrect" %}
+<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    <span><b>There is an issue in {{value}}. Please inform technical team</b></span>
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% elif  RecivedMessage=="invalidsheet" %}
+<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    <span><b>Your are trying to upload file with invalid sheet names: {{conflict_list}}. The accepted name is month-year for Payroll and month-Master for Master</b></span>
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% elif RecivedMessage == 'MissingColumnsPayroll' %}
+<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    There is a missing columns in payroll file:
+    {% for missing_column in missing_columns %}
+    <span><b> {{missing_list[(loop.index)-1]}} </b></span>
+    in sheet {{missing_column}}
+    {% endfor %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+
+{% elif RecivedMessage == 'MissingColumns' %}
+<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    There is a missing columns in uploaded master file:
+    {% for missing_column in missing_columns %}
+    <span><b>{{missing_column}} </b> , </span>
+    {% endfor %}
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+
+{% elif RecivedMessage == 'Conflict' %}
+<!-- Modal -->
+<div class="modal fade" id="ModalCenter1" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method='post' action='{{url_for("home_blueprint.conflict")}}'>
+                <div class="modal-header">
+                    <div class='container2'>
+                        <div class='wood-text'> Confirmation Required</div>
+                    </div>
+                    <a href="">
+                        <span aria-hidden="true" style="font-size:30px;">&times;</span>
+                    </a>
+                </div>
+
+
+                <div class="modal-body">
+
+                    <!-- the form content -->
+
+                    <div class='form-group'>
+                        <p style="color:#343a40; font-size:20px;  font-weight: bold;">Please confirm which columns
+                            required in auditing:</p>
+                        {% for conflicts in conflict_list %}
+                        <h6>Conflict {{loop.index}}: </h6>
+                        <fieldset class='form-group' id="group1">
+                            {% for conflict in conflicts %}
+                            <input type="radio" name="{{conflicts}}" value="{{conflict}}" required> {{conflict}}
+                            {% endfor %}
+                        </fieldset>
+                        {% endfor %}
+                    </div>
+
+                    <div class='form-group'>
+                        {% for conflicts in conflict_list %}
+                        <input type="input" style="display:none;" name="coflict_list" value="{{conflicts}}"/>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <input type='submit' name='action' value='Confirm'
+                           style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
+                           class='btn btn-primary'>
+                    <a href="index" class="btn btn-secondary"
+                       style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;">Close</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% elif RecivedMessage == 'PayrollConflict' %}
+<!-- Modal -->
+<div class="modal fade" id="ModalCenter2" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method='post' action='{{url_for("home_blueprint.conflict2")}}'>
+                <div class="modal-header">
+                    <div class='container2'>
+                        <div class='wood-text'> Confirmation Required</div>
+                    </div>
+                    <a href="">
+                        <span aria-hidden="true" style="font-size:30px;">&times;</span>
+                    </a>
+                </div>
+
+
+                <div class="modal-body">
+
+                    <!-- the form content -->
+                    {% if conflict_list%}
+                    <div class='form-group'>
+                        <p class="custom_parag1">Please Confirm Which Columns Required in Auditing:</p>
+                        {% for conflicts in conflict_list %}
+
+                        <h6> File Payroll- {{missing_columns[(loop.index)-1]}} </h6>
+                        <fieldset class='form-group' id="group2">
+                            {% for conflict in conflicts %}
+
+                            <h7> ({{loop.index}}) :</h7>
+
+                            {% for con in conflict%}
+
+                            <input type="radio" name="{{conflict}}" value="{{con}}" required> {{con}}
+                            {% endfor %}
+                            <br>
+                            {% endfor %}
+                        </fieldset>
+                        {% endfor %}
+                    </div>
+
+
+                    <div class='form-group'>
+                        {% for conflicts in conflict_list %}
+                        {% for conflict in conflicts %}
+                        <input type="input" style="display:none;" name="conflicts" value="{{conflict}}"/>
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+
+                    {% endif %}
+
+                    {% if optional_column%}
+
+                    <div class='form-group'>
+
+                        <p class="custom_parag1">Notice following are missing columns that can be optional
+                            if you click confirm then you are confirming that these columns are not required in the
+                            uploaded
+                            file.</p>
+
+                        {% for option_col in optional_column %}
+
+                        <h6> {{optional_sheet[(loop.index)-1]}} - {% for col in option_col %} {{col}}, {% endfor %}</h6>
+
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <input type='submit' name='action' value='Confirm'
+                           style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
+                           class='btn btn-primary'>
+                    <a href="index" class="btn btn-secondary"
+                       style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;">Close</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% elif RecivedMessage == 'not_mandit_col' %}
+<!-- Modal -->
+<div class="modal fade" id="ModalCenter3" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method='post' action='{{url_for("home_blueprint.notMandatoryMissing",notMantColumns=val2)}}'>
+                <div class="modal-header">
+                    <div class='container2'>
+                        <div class='wood-text'> Confirmation Required</div>
+                    </div>
+                    <a href="">
+                        <span aria-hidden="true" style="font-size:30px;">&times;</span>
+                    </a>
+                </div>
+
+
+                <div class="modal-body">
+
+                    <!-- the form content -->
+
+                    <div class='form-group'>
+                        <p style="color:#343a40; font-size:20px;  font-weight: bold;">The following columns are not in
+                            the uploaded file by click on confirm button you are confirmaing that these columns are not
+                            required</p>
+
+                        <div class='form-group'>
+                            <ul>
+                                {% for key, value in val2.items()%}
+                                <p>{{key}}</p>
+
+                                {% for val in value%}
+                                <li>{{val}}</li>
+                                {% endfor %}
+
+                                {% endfor%}
+
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <input type='submit' name='action' value='Confirm'
+                               style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
+                               class='btn btn-primary'>
+                        <a href="index" class="btn btn-secondary"
+                           style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;">Close</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% elif RecivedMessage == 'incorrect' %}
+<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    <span><b>Sorry! The uploaded file does not follow the required file standards! Please try another file! </b></span>
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+
+<!--    Message if the file not the correct one (overtime payroll format)-->
+{% elif error==True %}
+<div class="alert  alert-dismissible " style="background-color:#f8d7da; color:#721c24;" role="alert">
+    <span><b>{{value}}</b></span>
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+
+{% elif error1==True %}
+<div class="alert  alert-dismissible " style="background-color:#f8d7da; color:#721c24;" role="alert">
+    <span><b>{{value}}</b></span>
+    <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+
+<!--    Message if the file uploaded not match columns names (master data)-->
+{% if file_path==False %}
+<div class="alert alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    <span><b>Please select the Employee Master and Payroll files to start auditing!</b></span>
+    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+
+<!--    Message when user try to generate empty report-->
+{% if empty_report_error==True %}
+<div class="alert alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    <span><b>Sorry, Generating empty reports is not allowed, please switch on at least one table!</b></span>
+    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+<!--######################################################################################-->
+<!--################################Upload new file#######################################-->
+<!--######################################################################################-->
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card ">
+            <!--            <div class="card-header pb-0 p-3">-->
+            <!--          -->
+            <!--            </div>-->
+            <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <h6 class="mb-0 d-flex align-items-center">Upload Employee Master File</h6>
+                        <br>
+                        <!------------------which fotrm to open------------------->
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="radio" name="options" id="option1" value="option1" checked="checked">
+                                Upload
+                                Master </input>
+                                <input type="radio" name="options" id="option2" value="option2"> Upload Payroll </input>
+                            </div>
+                        </div>
+                        <br>
+
+                        <form method="post" action="index" enctype="multipart/form-data">
+                            <!------------------form to upload file------------------->
+                            <div class="selectt1  option1">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 m-md-0 mb-2">
+                                        {{ master_upload_form.hidden_tag() }}
+                                        {{ master_upload_form.master(accept=".xls,.xlsx", class="btn py-0 m-0") }}
+                                        {% if master_upload_form.master.errors %}
+                                        <ul class="text-danger text-sm asterisk my-1 ps-3">
+                                            {% for error in master_upload_form.master.errors %}
+                                            <li>{{ value }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
+
+                                    </div>
+
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex">
+                                            <button type="submit" name="upload" value="upload_Employymaster"
+                                                    id="UploadMaster"
+                                                    style="background-color: #e2e3e5; color:#383d41;"
+                                                    class="btn d-flex align-items-center justify-content-center m-0">
+                                                <em class="material-icons-round opacity-10">upload</em>&emsp;
+                                                Upload Master
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </form>
+
+                        <form method="post" action="index" enctype="multipart/form-data">
+                            <div class="selectt1 option2">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 m-md-0 mb-2">
+                                        {{ payroll_upload_form.hidden_tag() }}
+                                        {{ payroll_upload_form.PayRoll(accept=".xls,.xlsx", class="btn py-0 m-0") }}
+                                        {% if payroll_upload_form.PayRoll.errors %}
+                                        <ul class="text-danger text-sm asterisk my-1 ps-3">
+                                            {% for error in payroll_upload_form.PayRoll.errors %}
+                                            <li>{{ value }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-12 col-md-6">
+                                        <div class=" d-flex">
+                                            <button type="submit" name="upload" value="upload_Employypayroll"
+                                                    id="UploadPayroll"
+                                                    style="background-color: #e2e3e5; color:#383d41;"
+                                                    class="btn d-flex align-items-center justify-content-center m-0">
+                                                <em class="material-icons-round opacity-10">upload</em>&emsp;
+                                                Upload Payroll
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <!--                    <div class="card-header pb-0 p-3">-->
+                    <!--                    -->
+                    <!--                    </div>-->
+
+                    <div class="col-12 col-md-6">
+                        <h6 class="mb-0 d-flex align-items-center">Select Employee Master and Payroll File to start
+                            Auditing</h6>
+                        <br>
+                        <!------------------form to upload file------------------->
+                        <form role="form" method="post" action="auditingProcess" enctype="multipart/form-data"
+                              onSubmit="Start_Auditing()">
+                            {{ selectform_master.hidden_tag() }}
+                            <div class="row">
+                                <div class="col-12 col-md-6 m-md-0 mb-2">
+                                    {{selectform_master.directories(class="form-select")}}
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-12 col-md-6 m-md-0 mb-2">
+                                        <label for="mymultiselect"> Please Selete Payroll file/s</label>
+                                        <select class="js-multiple" id="mymultiselect" name="mymultiselect"
+                                                multiple="multiple" width="100%">
+
+                                            {% for full_paths_payroll,files_payroll in
+                                            zip(full_paths_payroll,files_payroll) %}
+                                            <option value="{{ full_paths_payroll }}">{{ files_payroll }}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                    </div>
+
+                                    <!-- onclick="Start_Auditing()"-->
+
+                                    <div class="col-12 col-md-6">
+                                        <div class=" d-flex">
+                                            <button type="submit" name="EmployeeInfoAudit_btn"
+                                                    value="EmployeeInfoAudit_table"
+                                                    style="background-color: #e2e3e5; color:#383d41;"
+                                                    id="GenerateReport"
+
+                                                    class="btn  d-flex align-items-center justify-content-center m-0">
+                                                <em class="material-icons-round opacity-10">check</em>&emsp;
+                                                Start Auditing
+                                            </button>
+                                            <img id="loadImgDate" src="/static/assets/img/loading.gif"
+                                                 style="margin-bottom: 13px" width="40" height="40">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% if file_path == True %}
+<div class="row ">
+    <div class="col-12 col-md-3 ">
+
+
+        <div class="card ">
+            <div class='container2'>
+                <div class='wood-text'>Summary of Auditing Results</div>
+            </div>
+
+            <div class="card-body pb-3 scroll">
+
+                <div class="table-responsive">
+                    <div class="policy-container">
+                        <div class="policy-table">
+                            <!-- Employee information heading -->
+                            <div class="headings">
+                                <h5 class="heading2 table-content1">Employee information Auditing Results</h5>
+
+                            </div>
+
+
+                            <!--Duplicate name-->
+                            <div class="policy">
+                                <div class="table-content1">Duplicate Name</div>
+                                {% if no_duplicate_name == True %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                </div>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                            <!--Missing name-->
+                            <div class="policy">
+                                <div class="table-content1">Missing Name</div>
+                                {% if no_missing_name == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                            <!--Invalid CPR-->
+                            <div class="policy">
+                                <div class="table-content1">Invalid CPR</div>
+                                {% if no_invalid_CPR == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                            <!--Duplicate CPR-->
+                            <div class="policy">
+                                <div class="table-content1">Duplicate CPR</div>
+                                {% if no_duplicate_cpr == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                            <!--Duplicate Account Number-->
+                            <div class="policy">
+                                <div class="table-content1">Duplicate AccountNo</div>
+                                {% if no_duplicate_acount_no == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!--Invalid Account Number-->
+                            <div class="policy">
+                                <div class="table-content1">Invalid AccountNo</div>
+                                {% if no_invalid_account_no == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!--Invalid Age-->
+                            <div class="policy">
+                                <div class="table-content1">Invalid Age</div>
+                                {% if no_invalid_age == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!--Missing Category-->
+                            <div class="policy">
+                                <div class="table-content1">Missing Category</div>
+                                {% if no_missing_category == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!--Invalid Annual-->
+                            <div class="policy">
+                                <div class="table-content1">Invalid Annual Leave</div>
+                                {% if no_invalid_annual == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!--Invalid Sick leave-->
+                            <div class="policy">
+                                <div class="table-content1">Invalid Sick Leave</div>
+                                {% if no_invalid_sick_leave == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+
+                            <!--Duplicate high ranking position-->
+                            <div class="policy">
+                                <div class="table-content1">Duplicate high ranking position</div>
+                                {% if no_duplicate_high_rank_posisiton == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+
+                            <!--missing grade-->
+                            <div class="policy">
+                                <div class="table-content1">Missing Grade</div>
+                                {% if no_missing_grade == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+
+                            <!--missing material status-->
+                            <div class="policy">
+                                <div class="table-content1">Missing Material Status</div>
+                                {% if no_missing_material_status == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!--missing employee in payroll-->
+                            <div class="policy">
+                                <div class="table-content1">Employee not in payroll</div>
+                                {% if no_employee_not_in_payroll == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!--missing employee in master-->
+                            <div class="policy">
+                                <div class="table-content1">Employee not in master</div>
+                                {% if no_employee_not_in_master == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+
+
+                            <!-- Deduction Allowance Summary table content -->
+                            <div class="headings">
+                                <h5 class="heading2 table-content1">Deduction Auditing Results </h5>
+
+                            </div>
+
+
+                            <!--Invalid Pension Allowance-->
+                            <div class="heading2 table-content1"> Invalid Pension Allowance</div>
+                            {% for key, value in no_invalid_pension_allowance.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+                            <!--Invalid Social Allowance Deduction-->
+                            <div class="heading2 table-content1"> Invalid Social Allowance Deduction</div>
+                            {% for key, value in no_invalid_social_allowance_deduction.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Invalid Unemployment Allowance Deduction-->
+                            <div class="heading2 table-content1"> Invalid Unemployment Allowance Deduction</div>
+                            {% for key, value in no_invalid_unemployment_allowance_deduction.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!-- Allowance Auditing summary table content-->
+                            <!-- Deduction Allowance Summary table content -->
+                            <div class="headings">
+                                <h5 class="heading2 table-content1">Allowance Auditing Results </h5>
+
+                            </div>
+
+
+                            <!--Car & Transport  Allowance-->
+                            <div class="heading2 table-content1"> Car & Transport Allowance</div>
+                            {% for key, value in no_car_transport_allowance.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Invalid Transport  Allowance-->
+                            <div class="heading2 table-content1"> Invalid Transport Allowance</div>
+                            {% for key, value in no_invalid_transport_allowance.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Allowance with no grade-->
+                            <div class="heading2 table-content1">Allowance Without Grade</div>
+                            {% for key, value in no_allowance_with_nograde.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Allowance with no material status-->
+                            <div class="heading2 table-content1">Allowance Without Material-Status</div>
+                            {% for key, value in no_allowance_with_nomaterial.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+                            <!--Invalid Living  Allowance-->
+                            <div class="heading2 table-content1"> Invalid Living Allowance</div>
+                            {% for key, value in no_living_allowance.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Invalid Social  Allowance-->
+                            <div class="heading2 table-content1"> Invalid Social Allowance</div>
+                            {% for key, value in no_invalid_social_allowance.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Invalid Housing  Allowance-->
+                            <div class="heading2 table-content1"> Invalid Housing Allowance</div>
+                            {% for key, value in no_invalid_housing_allowance.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Invalid Special  Allowance-->
+                            <div class="heading2 table-content1"> Invalid Special Allowance</div>
+                            {% for key, value in no_invalid_special_allowance.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Invalid Car Allowance based on high ranking position-->
+                            <div class="heading2 table-content1"> Invalid Car Allowance based on high ranking position
+                            </div>
+                            {% for key, value in no_invalid_car_allow_position.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Car Allowance (60)-->
+                            <div class="heading2 table-content1"> Car Allowance (60)
+                            </div>
+                            {% for key, value in no_normal_employee_60.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+                            <!--Car Allowance (other than 60 or 0)-->
+                            <div class="heading2 table-content1"> Car Allowance other than (60 or 0)
+                            </div>
+                            {% for key, value in no_normal_employee_not60.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Invalid communication allowance high position-->
+                            <div class="heading2 table-content1">Communication Allowance high position
+                            </div>
+                            {% for key, value in no_emp_high_positions_comm_allow.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--communication allowance no high position-->
+                            <div class="heading2 table-content1">Communication Allowance (normal employee)
+                            </div>
+                            {% for key, value in no_emp_not_high_positions_comm_allow.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!--Invalid communication allowance no high position-->
+                            <div class="heading2 table-content1">Invalid Communication Allowance (normal employee)
+                            </div>
+                            {% for key, value in no_emp_not_high_positions_invalid_comm_allow.items()%}
+                            <div class="policy">
+                                {{sheetnames[key]}}
+                                {% if value == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {%endfor%}
+
+
+                            <!-- Employee Overtime heading -->
+                            <div class="headings">
+                                <h5 class="heading2 table-content1">Employee Overtime Auditing Results</h5>
+
+                            </div>
+
+
+                            <!--Regular Overtime -->
+                            <div class="policy">
+                                <div class="table-content1">Regular Overtime</div>
+                                {% if no_final_summary_regualr_overtime == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+
+                            <!--Holiday Overtime -->
+                            <div class="policy">
+                                <div class="table-content1">Holiday Overtime</div>
+                                {% if no_final_summary_holiday_overtime == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+
+                            <!--Not Allowed Overtime -->
+                            <div class="policy">
+                                <div class="table-content1">Not Allowed Overtime</div>
+                                {% if no_not_allowed_overtime == True %}
+                                <em class="material-symbols-outlined passicon head-text d-flex align-items-center justify-content-center">task_alt</em>
+                                {% else %}
+                                <div class="table-content1"><em
+                                        class="material-symbols-outlined erroricon head-text d-flex align-items-center justify-content-center">error_circle_rounded</em>
+                                </div>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!--######################################################################################-->
+    <!--######################## Results Tables for auditing  ###############-->
+    <!--######################################################################################-->
+    <div class="col-12 col-md-9">
+
+        <div class="card">
+            <div class='container2'>
+                <div class='wood-text'>Auditing Results</div>
+            </div>
+
+            <div class="card-body pb-3 scroll">
+
+                <div class="tab">
+                    <button class="tablinks" onclick="openCity(event, '1')">Employee Information</button>
+                    <button class="tablinks" onclick="openCity(event, '2')">Deduction</button>
+                    <button class="tablinks" onclick="openCity(event, '3')">Allowance</button>
+                    <button class="tablinks" onclick="openCity(event, '4')">Overtime</button>
+                </div>
+
+                <!-------------------------------------------------------
+                --------------Employee Information section---------------
+                 ------------------------------------------------------->
+                <div id="1" class="tabcontent active">
+                    <!------------This section shows the switch buttons  and Generate report button ------------->
+                    <div class="card">
+                        {% if no_duplicate_name !=True or no_missing_name !=True or
+                        no_invalid_CPR !=True and no_duplicate_cpr !=True and
+                        no_duplicate_acount_no !=True or no_invalid_account_no !=True or
+                        no_invalid_age !=True or no_missing_category !=True or
+                        no_invalid_annual !=True or no_invalid_sick_leave !=True or
+                        no_duplicate_high_rank_posisiton !=True or no_missing_grade !=True or
+                        no_missing_material_status !=True %}
+                        <form method="post" id="EmployInfoForm" action="/downloadAuditedEmployeeInfo">
+                            <div class="col-12 col-md-12">
+                                <div class=" d-flex  justify-content-end">
+                                    <button type="submit"
+                                            id="EmployeeInfoButton"
+                                            name="EmployInfoReport"
+                                            style="background-color:#d4edda; color:#155724; " ,
+                                            class="btn  d-flex align-items-center justify-content-center m-0">
+                                        <em class="material-icons-round opacity-10">download</em>&emsp;
+                                        Generate Report
+                                    </button>
+
+
+                                </div>
+                            </div>
+
+
+                            <p class="container2 head-text d-flex align-items-center justify-content-center"
+                               style="background-color:#f8d7da; color:#721c24; font-size: 17px">
+                                <em class="material-symbols-outlined">error_circle_rounded</em>
+                                &ensp;
+                                Employee Master
+
+                            </p>
+
+
+                            <!--Switch-off all-->
+                            <div class="col-12 col-md-2">
+                                <p class="switch-title">Switch All</p>
+                                <label class="switch switch-green">
+                                    <input type="checkbox" id="selectAllemployeeinfo" name="showtable"
+                                           value="showtable1" class="switch-input infoCheckbox" checked>
+                                    <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                    <span class="switch-handle col-mb-12"> </span>
+                                </label>
+                            </div>
+
+                            <div class="card-body pb-3 scroll">
+
+
+                                <div class="row">
+
+                                    <!--Duplicate Names-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Duplicate Names</p>
+                                        <label class="switch switch-green">
+                                            {% if no_duplicate_name !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkDuplicateName"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkDuplicateName"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Missing Names-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Missing Names</p>
+                                        <label class="switch switch-green">
+                                            {% if no_missing_name !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkMissingName"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkMissingName"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                        <!--                                     <label> <input type="checkbox" name="colorCheckbox" value="checkDuplicateName" checked> Check Car and Transport Disbursement</label>-->
+                                    </div>
+
+                                    <!--Invalid CPR-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Invalid CPR</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_CPR !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkInvalidCPR"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkInvalidCPR"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Duplicate CPR-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Duplicate CPR</p>
+                                        <label class="switch switch-green">
+                                            {% if no_duplicate_cpr !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkDuplicateCPR"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkDuplicateCPR"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Duplicate Acc-No-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Duplicate Acc-No</p>
+                                        <label class="switch switch-green">
+                                            {% if no_duplicate_acount_no !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkDuplicateAccNo"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkDuplicateAccNo"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Invalid Acc-No-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Invalid Acc-No</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_account_no !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkInvalidAccNo"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkInvalidAccNo"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+
+                                    <!--Invalid Age-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Age</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_age !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkInvalidAge"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkInvalidAge"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+
+                                    </div>
+
+                                    <!--Missing Category-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Missing Category</p>
+                                        <label class="switch switch-green">
+                                            {% if no_missing_category !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkMissingCategory"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkMissingCategory"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+
+                                    </div>
+
+
+                                    <!--Invalid annual leave-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Annual Leave</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_annual !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkInvalidALeave"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkInvalidALeave"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Invalid sick leave-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Sick Leave</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_sick_leave !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkInvalidSLeave"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkInvalidSLeave"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Duplicate High Ranking Position-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">HR-Position</p>
+                                        <label class="switch switch-green">
+                                            {% if no_duplicate_high_rank_posisiton !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkDuplicatHighRanking"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkDuplicatHighRanking"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Missing Grade-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Missing Grade</p>
+                                        <label class="switch switch-green">
+                                            {% if no_missing_grade !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkMissingGrade"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkMissingGrade"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Missing Material Status-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Missing Material Status</p>
+                                        <label class="switch switch-green">
+                                            {% if no_missing_material_status !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkMissingMaterialStatus"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkMissingMaterialStatus"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Employee not in payroll-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Employee not in payroll</p>
+                                        <label class="switch switch-green">
+                                            {% if no_employee_not_in_payroll !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkEmployeeNotInPayroll"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkEmployeeNotInPayroll"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Employee not in master-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Employee not in master</p>
+                                        <label class="switch switch-green">
+                                            {% if no_employee_not_in_master !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkEmployeeNotInMaster"
+                                                   class="switch-input infoCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkEmployeeNotInMaster"
+                                                   class="switch-input infoCheckbox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+                                </div>
+
+                                <br>
+                                {% else %}
+                                <p class="container2 head-text d-flex align-items-center justify-content-center"
+                                   style="background-color:#d4edda; color:#155724; font-size:17px;">
+                                    &ensp;
+                                    Employee Master
+
+                                </p>
+                                {% endif %}
+
+
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <!------------------------Table section---------------------------->
+                    <!--------Duplicate name------->
+                    {% if no_duplicate_name !=True %}
+                    <div class="checkDuplicateName selectt  showtable1">
+                        <h5 class="container2 head-text">Duplicate Names</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in duplicate_name_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in duplicate_name_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(duplicate_name_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Missing name------->
+                    {% if no_missing_name !=True %}
+                    <div class="checkMissingName selectt showtable1">
+                        <h5 class="container2 head-text">Missing Names</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in missing_name_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in missing_name_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(missing_name_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!--------invalid CPR------->
+                    {% if no_invalid_CPR !=True %}
+                    <div class="checkInvalidCPR selectt showtable1">
+                        <h5 class="container2 head-text">Invalid CPR</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in invalid_CPR_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in invalid_CPR_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(invalid_CPR_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!--------Duplicate CPR------->
+                    {% if no_duplicate_cpr !=True %}
+                    <div class="checkDuplicateCPR selectt showtable1">
+                        <h5 class="container2 head-text">Duplicate CPR</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in duplicate_cpr_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in duplicate_cpr_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(duplicate_cpr_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Duplicate Account No------->
+                    {% if no_duplicate_acount_no !=True %}
+                    <div class="checkDuplicateAccNo selectt showtable1">
+                        <h5 class="container2 head-text">Duplicate Account No</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in duplicate_acount_no_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in duplicate_acount_no_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(duplicate_acount_no_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Invalid Account No------->
+                    {% if no_invalid_account_no !=True %}
+                    <div class="checkInvalidAccNo selectt showtable1">
+                        <h5 class="container2 head-text">Invalid Account No</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in invalid_account_no_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in invalid_account_no_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(invalid_account_no_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Invalid Age------->
+                    {% if no_invalid_age !=True %}
+                    <div class="checkInvalidAge selectt showtable1">
+                        <h5 class="container2 head-text">Invalid Age</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in invalid_age_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in invalid_age_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(invalid_age_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!-------Missing Category------->
+                    {% if no_missing_category !=True %}
+                    <div class="checkMissingCategory selectt showtable1">
+                        <h5 class="container2 head-text">Missing Category</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in missing_category_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in missing_category_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(missing_category_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!--------Invalid Annual Leave------->
+                    {% if no_invalid_annual !=True %}
+                    <div class="checkInvalidALeave selectt showtable1">
+                        <h5 class="container2 head-text">Invalid Annual Leave</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in invalid_annual_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in invalid_annual_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(invalid_annual_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Invalid Sick Leave------->
+                    {% if no_invalid_sick_leave !=True %}
+                    <div class="checkInvalidSLeave selectt showtable1">
+                        <h5 class="container2 head-text">Invalid Sick Leave</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in invalid_sick_leave_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in invalid_sick_leave_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(invalid_sick_leave_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Check Duplicate High Ranking Position------->
+                    {% if no_duplicate_high_rank_posisiton !=True %}
+                    <div class="checkDuplicatHighRanking selectt showtable1">
+                        <h5 class="container2 head-text">Duplicate High Ranking Position</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in duplicate_high_rank_posisiton_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in duplicate_high_rank_posisiton_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(duplicate_high_rank_posisiton_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Check Missing Grade------>
+                    {% if no_missing_grade !=True %}
+                    <div class="checkMissingGrade selectt showtable1">
+                        <h5 class="container2 head-text">Missing Grade</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in missing_grade_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in missing_grade_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(missing_grade_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Check Missing Material Status------>
+                    {% if no_missing_material_status !=True %}
+                    <div class="checkMissingMaterialStatus selectt showtable1">
+                        <h5 class="container2 head-text">Missing Material Status</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in missing_material_status_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in missing_material_status_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(missing_material_status_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Check employee not in master------>
+                    {% if no_employee_not_in_master !=True %}
+                    <div class="checkEmployeeNotInMaster selectt showtable1">
+                        <h5 class="container2 head-text">Employee not in master</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in employee_not_in_master_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in employee_not_in_master_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(employee_not_in_master_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Check employee not in payroll------>
+                    {% if no_employee_not_in_payroll !=True %}
+                    <div class="checkEmployeeNotInPayroll selectt showtable1">
+                        <h5 class="container2 head-text">Employee not in payroll</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in employee_not_in_payroll_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in employee_not_in_payroll_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(employee_not_in_payroll_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+
+                <div id="2" class="tabcontent">
+
+                    <!-------------------------------------------------------
+                      -------------------deduction section-------------------
+                      ------------------------------------------------------->
+                    <!------------This section shows the switch buttons  and Generate report button ------------->
+                    <div class="card">
+
+                        <form method="post" id="DeductionForm" action="/downloadAuditedDeduction">
+                            <!--                            <div class="col-12 col-md-12">-->
+                            <div class="d-flex justify-content-end">
+                                <button type="submit"
+                                        name="DeductionReport"
+                                        id="DeducConfirmButton"
+                                        style="background-color:#d4edda; color:#155724; "
+                                        class="btn  d-flex align-items-center justify-content-center m-0">
+                                    <em class="material-icons-round opacity-10">download</em>&emsp;
+                                    Generate Report
+                                </button>
+
+                            </div>
+
+
+                            {% for key, value in sheetnames.items()%}
+                            {% if no_invalid_pension_allowance[key] !=True or
+                            no_invalid_social_allowance_deduction[key] !=True or
+                            no_invalid_unemployment_allowance_deduction[key] !=True%}
+                            <div class="card-body pb-3 ">
+
+                                <p class="container2 head-text d-flex align-items-center justify-content-center"
+                                   style="background-color:#f8d7da; color:#721c24; font-size:17px;">
+                                    <em class="material-symbols-outlined">error_circle_rounded</em>
+                                    &ensp;
+                                    Deduction on {{value}}
+
+                                </p>
+
+
+                                <!--Switch-off all-->
+                                <div class=" d-flex justify-content-start">
+                                    <p class="switch-title">Switch All</p>
+                                    <label class="switch switch-green ">
+
+                                        <input type="checkbox" id="selectAlldeduc" name="showtable"
+                                               value="showtable2" class="switch-input DeducCheckBox" checked>
+
+                                        <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                        <span class="switch-handle col-mb-12"> </span>
+                                    </label>
+                                </div>
+
+
+                                <div class="row">
+
+                                    <!--Check Social Deductions-->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Pension Allowance Deduction</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_pension_allowance[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkPensionAllowanceDeduction{{value}}"
+                                                   class="switch-input DeducCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkPensionAllowanceDeduction{{value}}"
+                                                   class="switch-input DeducCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Check Social Allowance Deduction-->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Social Allowance Deduction</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_social_allowance_deduction[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkSocialAllowanceDeduction{{value}}"
+                                                   class="switch-input DeducCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkSocialAllowanceDeduction{{value}}"
+                                                   class="switch-input DeducCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                        <!--                                     <label> <input type="checkbox" name="colorCheckbox" value="checkDuplicateName" checked> Check Car and Transport Disbursement</label>-->
+                                    </div>
+
+                                    <!-- Check Unemployment Deduction-->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Unemployment Deduction</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_unemployment_allowance_deduction[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkUnemploymentDeduction{{value}}"
+                                                   class="switch-input DeducCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkUnemploymentDeduction{{value}}"
+                                                   class="switch-input DeducCheckBox" disabled>
+                                            {% endif %}
+                                            <span class="switch-label" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle"> </span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% else %}
+                            <p class="container2 head-text d-flex align-items-center justify-content-center"
+                               style="background-color:#d4edda; color:#155724; font-size:17px;">
+                                <em class="material-symbols-outlined">task_alt</em>
+                                &ensp;
+                                Deduction on {{value}}
+
+                            </p>
+                            {% endif %}
+                            {% endfor%}
+
+
+                        </form>
+                    </div>
+
+
+                    <!------------------------Table section---------------------------->
+
+                    {% for key, value in invalid_pension_allowance.items()%}
+                    <!--------Pension Allowance Deduction------->
+                    {% if no_invalid_pension_allowance[key] !=True %}
+                    <div class="checkPensionAllowanceDeduction{{sheetnames[key]}} selectt3 showtable2">
+                        <h5 class="container2 head-text">Pension Allowance Deduction {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in invalid_social_allowance_deduction.items()%}
+                    <!--------Social Allowance Deduction------->
+                    {% if no_invalid_social_allowance_deduction[key] !=True %}
+                    <div class="checkSocialAllowanceDeduction{{sheetnames[key]}} selectt3 showtable2">
+                        <h5 class="container2 head-text">Social Allowance Deduction {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    <!--------Unemployment Deduction------->
+                    {% for key, value in invalid_unemployment_allowance_deduction.items()%}
+                    {% if no_invalid_unemployment_allowance_deduction[key] !=True %}
+                    <div class="checkUnemploymentDeduction{{sheetnames[key]}} selectt3 showtable2">
+                        <h5 class="container2 head-text">Unemployment Deduction {{sheetnames[key]}} </h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+
+
+                <div id="3" class="tabcontent">
+                    <!-------------------------------------------------------
+                    --------------------Allowance section-------------------
+                    ------------------------------------------------------->
+                    <!------------This section shows the switch buttons  and Generate report button ------------->
+                    <div class="card">
+                        <form method="post" id="AllowanceForm" action="/downloadAuditedAllowanmce">
+                            <div class="col-12 col-md-12">
+                                <div class=" d-flex  justify-content-end">
+                                    <button type="submit"
+                                            name="AllowanceReport"
+                                            id="AllowConfirmButton"
+                                            style="background-color:#d4edda; color:#155724; "
+                                            class="btn  d-flex align-items-center justify-content-center m-0">
+                                        <em class="material-icons-round opacity-10">download</em>&emsp;
+                                        Generate Report
+                                    </button>
+
+                                </div>
+                            </div>
+
+                            <div class="card-body pb-3">
+
+                                {% for key, value in sheetnames.items()%}
+
+                                {% if no_car_transport_allowance[key] !=True or
+                                no_invalid_transport_allowance[key] !=True or
+                                no_allowance_with_nograde[key] !=True or no_allowance_with_nomaterial[key]
+                                !=True or
+                                no_living_allowance[key] !=True or no_invalid_social_allowance[key] !=True or
+                                no_invalid_housing_allowance[key] !=True or no_invalid_special_allowance[key]
+                                !=True or
+                                no_invalid_car_allow_position[key] !=True or no_normal_employee_60[key] !=True
+                                or
+                                no_normal_employee_not60[key] !=True or no_emp_high_positions_comm_allow[key]
+                                !=True or
+                                no_emp_not_high_positions_comm_allow[key] !=True or
+                                no_emp_not_high_positions_invalid_comm_allow[key] !=True %}
+
+                                <p class="container2 head-text d-flex align-items-center justify-content-center"
+                                   style="background-color:#f8d7da; color:#721c24; font-size:17px;">
+                                    <em class="material-symbols-outlined">error_circle_rounded</em>
+                                    &ensp;
+                                    Payroll on {{value}}
+                                </p>
+                                <!--Switch-off all-->
+                                <div class=" d-flex justify-content-start">
+                                    <p class="switch-title">Switch All</p>
+                                    <label class="switch switch-green ">
+
+                                        <input type="checkbox" id="selectAllAllow" name="showtable"
+                                               value="showtable3" class="switch-input AllowCheckBox" checked>
+
+                                        <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                        <span class="switch-handle col-mb-12"> </span>
+                                    </label>
+                                </div>
+
+
+                                <div class="row">
+
+                                    <!--Check Car & Transport Allowance -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Car & Transport Allowance</p>
+                                        <label class="switch switch-green">
+                                            {% if no_car_transport_allowance[key] !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkCarAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkCarAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Check Transport Allowance value -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Transport Allowance</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_transport_allowance[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkTransportAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkTransportAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check Allowance without grade -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Allowance without Grade</p>
+                                        <label class="switch switch-green">
+                                            {% if no_allowance_with_nograde[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkAllowanceWithNoGrade{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkAllowanceWithNoGrade{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+                                    <!--Check Allowance  without Material Status -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Allowance without Material Status</p>
+                                        <label class="switch switch-green">
+                                            {% if no_allowance_with_nomaterial[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkAllowanceWithNoStatus{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkAllowanceWithNoStatus{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check Living Allowance Allowance -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Living Allowance</p>
+                                        <label class="switch switch-green">
+                                            {% if no_living_allowance[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkLivingAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkLivingAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check Social Allowance Allowance -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Social Allowance</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_social_allowance[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkSocialAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkSocialAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check Housing Allowance Allowance -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Housing Allowance</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_housing_allowance[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkHousingAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkHousingAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check Housing Allowance Allowance -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Special Allowance</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_special_allowance[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkSpecialAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkSpecialAllowance{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check Car Allowance  based on high Position -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Car Allowance</p>
+                                        <label class="switch switch-green">
+                                            {% if no_invalid_car_allow_position[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkCarAllowanceHighPosition{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkCarAllowanceHighPosition{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check Car Allowance not high position and earn 60 -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Car Allowance (earn 60)</p>
+                                        <label class="switch switch-green">
+                                            {% if no_normal_employee_60[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkCarAllowance60{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkCarAllowance60{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Check Car Allowance not high position and earn other than 60 or 0 -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Car Allowance (earn other than 60)</p>
+                                        <label class="switch switch-green">
+                                            {% if no_normal_employee_not60[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkCarAllowanceNot60{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkCarAllowanceNot60{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check communication Allowance high position  -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Communication Allowance (high position)</p>
+                                        <label class="switch switch-green">
+                                            {% if no_emp_high_positions_comm_allow[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkCommuAllowanceHighPosition{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkCommuAllowanceHighPosition{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check communication Allowance not high position  -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Communication Allowance (normal employee)</p>
+                                        <label class="switch switch-green">
+                                            {% if no_emp_not_high_positions_comm_allow[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkCommuAllowanceNotHighPosition{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkCommuAllowanceNotHighPosition{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Check communication Allowance not high position and invalid commu allow  -->
+                                    <div class="col-12 col-md-3">
+                                        <p class="switch-title">Invalid Communication Allowance (normal employee)</p>
+                                        <label class="switch switch-green">
+                                            {% if no_emp_not_high_positions_invalid_comm_allow[key] !=True %}
+                                            <input type="checkbox" name="switchedOn"
+                                                   value="checkInvalidCommuAllowanceNotHighPosition{{value}}"
+                                                   class="switch-input AllowCheckBox" checked>
+                                            {% else %}
+                                            <input type="checkbox"
+                                                   value="checkInvalidCommuAllowanceNotHighPosition{{value}}"
+                                                   class="switch-input AllowCheckBox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                {% else %}
+                                <p class="container2 head-text d-flex align-items-center justify-content-center"
+                                   style="background-color:#d4edda; color:#155724; font-size: 17px;">
+                                    <em class="material-symbols-outlined">task_alt</em>
+                                    &ensp;
+                                    Payroll on {{value}}
+                                </p>
+                                {% endif %}
+
+                                {% endfor%}
+
+
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <!------------------------Table section---------------------------->
+                    {% for key, value in check_car_allowance.items()%}
+                    <!--------Car & Transport  Allowance ------->
+                    {% if no_car_transport_allowance[key] !=True %}
+                    <div class="checkCarAllowance{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Car & Transport Allowance {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in invalid_transport_allowance.items()%}
+                    <!--------Transport  Allowance ------->
+                    {% if no_invalid_transport_allowance[key] !=True %}
+                    <div class="checkTransportAllowance{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Transport Allowance {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in allowance_with_nograde.items()%}
+                    <!-------  Allowance with no grade ------->
+                    {% if no_allowance_with_nograde[key] !=True %}
+                    <div class="checkAllowanceWithNoGrade{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text"> Allowance with no grade {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in allowance_with_nomaterial.items()%}
+                    <!-------  Allowance with no status ------->
+                    {% if no_allowance_with_nomaterial[key] !=True %}
+                    <div class="checkAllowanceWithNoStatus{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text"> Allowance with no status {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    <!-------- Living Allowance------->
+                    {% for key, value in invalid_living_allowance.items()%}
+                    {% if no_living_allowance[key] !=True %}
+                    <div class="checkLivingAllowance{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Living Allowance {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in invalid_social_allowance.items()%}
+                    <!--------Social  Allowance------->
+                    {% if no_invalid_social_allowance[key] !=True %}
+                    <div class="checkSocialAllowance{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Social Allowance {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in invalid_housing_allowance.items()%}
+                    <!--------Housing  Allowance------->
+                    {% if no_invalid_housing_allowance[key] !=True %}
+                    <div class="checkHousingAllowance{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Housing Allowance {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in invalid_special_allowance.items()%}
+                    <!--------Special  Allowance------->
+                    {% if no_invalid_special_allowance[key] !=True %}
+                    <div class="checkSpecialAllowance{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Special Allowance {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in invalid_car_allow_position.items()%}
+                    <!--------car  Allowance based on high ranking position------->
+                    {% if no_invalid_car_allow_position[key] !=True %}
+                    <div class="checkCarAllowanceHighPosition{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Car Allowance based on high ranking position
+                            {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in normal_employee_60.items()%}
+                    <!--------car  Allowance who earn 60------->
+                    {% if no_normal_employee_60[key] !=True %}
+                    <div class="checkCarAllowance60{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Car Allowance (earn 60)
+                            {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% for key, value in normal_employee_not60.items()%}
+                    <!--------car Allowance who earn other than 60------->
+                    {% if no_normal_employee_not60[key] !=True %}
+                    <div class="checkCarAllowanceNot60{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Car Allowance (earn other than 60)
+                            {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in emp_high_positions_comm_allow.items()%}
+                    <!--------Communication Allowance high position ------->
+                    {% if no_emp_high_positions_comm_allow[key] !=True %}
+                    <div class="checkCommuAllowanceHighPosition{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Communication Allowance (high position)
+                            {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% for key, value in emp_not_high_positions_comm_allow.items()%}
+                    <!--------Communication Allowance not high position ------->
+                    {% if no_emp_not_high_positions_comm_allow[key] !=True %}
+                    <div class="checkCommuAllowanceNotHighPosition{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Communication Allowance (normal employees)
+                            {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+
+                    {% for key, value in emp_not_high_positions_invalid_comm_allow.items()%}
+                    <!--------Invalid Communication Allowance not high position ------->
+                    {% if no_emp_not_high_positions_invalid_comm_allow[key] !=True %}
+                    <div class="checkInvalidCommuAllowanceNotHighPosition{{sheetnames[key]}} selectt showtable3">
+                        <h5 class="container2 head-text">Invalid Communication Allowance (normal employees)
+                            {{sheetnames[key]}}</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {%for col in value.columns.values%}
+                                        <span class="heading">{{ col }}</span>
+                                        {%endfor%}
+
+                                    </div>
+
+
+                                    {% for col, row in value.iterrows() %}
+                                    <div class="policy">
+                                        {% for data in row %}
+                                        <span>{{ data }}</span>
+                                        {% endfor%}
+                                    </div>
+                                    {%endfor%}
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                </div>
+
+
+                <!-------------------------------------------------------
+                --------------------Overtime section-------------------
+                ------------------------------------------------------->
+
+                <div id="4" class="tabcontent">
+                    <!------------This section shows the switch buttons  and Generate report button ------------->
+                    <div class="card">
+                        <form method="post" id="EmployOvertimeForm" name="EmployeeOvertimeMainForm"
+                              action="/downloadAuditedEmployeeOvertime">
+                            <!--Generate overtime report button-->
+                            <div class="col-12 col-md-12">
+                                <div class=" d-flex  justify-content-end">
+                                    <button type="submit"
+                                            id="EmployeeOvertimeButton"
+                                            name="EmployOvertimeReport"
+                                            style="background-color:#d4edda; color:#155724; "
+                                            class="btn  d-flex align-items-center justify-content-center m-0">
+                                        <em class="material-icons-round opacity-10">download</em>&emsp;
+                                        Generate Report
+                                    </button>
+
+
+                                </div>
+
+                                {% if no_final_summary_regualr_overtime !=True or
+                                no_final_summary_holiday_overtime !=True or
+                                no_not_allowed_overtime !=True %}
+                                <p class="container2 head-text d-flex align-items-center justify-content-center"
+                                   style="background-color:#f8d7da; color:#721c24;  font-size:17px;">
+                                    <em class="material-symbols-outlined">error_circle_rounded</em>
+                                    &ensp;
+                                    Overtime Results
+
+                                </p>
+                                <!--Switch-off all-->
+                                <div class=" d-flex justify-content-start">
+                                    <p class="switch-title">Switch All</p>
+                                    <label class="switch switch-green ">
+                                        <input type="checkbox" id="selectAllOvertime" name="showtable"
+                                               value="showtable4" class="switch-input overtimeCheckbox" checked>
+                                        <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                        <span class="switch-handle col-mb-12"> </span>
+                                    </label>
+                                </div>
+                            </div>
+
+
+                            <div class="card-body pb-3 scroll">
+
+
+                                <div class="row">
+
+                                    <!--Regular Overtime-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Regular Overtime</p>
+                                        <label class="switch switch-green">
+                                            {% if no_final_summary_regualr_overtime !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkRegularOvertime"
+                                                   class="switch-input overtimeCheckbox" id="chekcheckRegularOvertime"
+                                                   checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkRegularOvertime"
+                                                   class="switch-input overtimeCheckbox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+                                    <!--Holiday Overtime-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Holiday Overtime</p>
+                                        <label class="switch switch-green">
+                                            {% if no_final_summary_holiday_overtime !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkHolidayOvertime"
+                                                   class="switch-input overtimeCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkHolidayOvertime"
+                                                   class="switch-input overtimeCheckbox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                    <!--Not Allowed Overtime-->
+                                    <div class="col-12 col-md-2">
+                                        <p class="switch-title">Not Allowed Overtime</p>
+                                        <label class="switch switch-green">
+                                            {% if no_not_allowed_overtime !=True %}
+                                            <input type="checkbox" name="switchedOn" value="checkNotAllowedOvertime"
+                                                   class="switch-input overtimeCheckbox" checked>
+                                            {% else %}
+                                            <input type="checkbox" value="checkHolidayOvertime"
+                                                   class="switch-input overtimeCheckbox" disabled>
+                                            {% endif %}
+
+                                            <span class="switch-label col-mb-12" data-on="Show" data-off="Hide"></span>
+                                            <span class="switch-handle col-mb-12"> </span>
+                                        </label>
+                                    </div>
+
+
+                                </div>
+                                {% else %}
+                                <p class="container2 head-text d-flex align-items-center justify-content-center"
+                                   style="background-color:#d4edda; color:#155724; font-size:17px;">
+                                    <em class="material-symbols-outlined">task_alt</em>
+                                    &ensp;
+                                    Overtime Results
+
+                                </p>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
+
+
+                    <!------------------------Table section---------------------------->
+                    <!--------Regular Overtime------->
+                    {% if no_final_summary_regualr_overtime !=True %}
+                    <div class="checkRegularOvertime selectt showtable4">
+                        <h5 class="container2 head-text">Regular Overtime</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in final_summary_regualr_overtime_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in final_summary_regualr_overtime_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(final_summary_regualr_overtime_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Holiday Overtime------->
+                    {% if no_final_summary_holiday_overtime !=True %}
+                    <div class="checkHolidayOvertime selectt showtable4">
+                        <h5 class="container2 head-text">Holiday Overtime</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in final_summary_holiday_overtime_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in final_summary_holiday_overtime_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(final_summary_holiday_overtime_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+
+                    <!--------Not Allowed Overtime------->
+                    {% if no_not_allowed_overtime !=True %}
+                    <div class="checkNotAllowedOvertime selectt showtable4">
+                        <h5 class="container2 head-text">Not allowed Overtime</h5>
+                        <div class="table-responsive">
+                            <div class="policy-container">
+                                <div class="policy-table">
+
+                                    <div class="headings">
+                                        {% for col in not_allowed_overtime_columns %}
+                                        <span class="heading">{{ col }}</span>
+                                        {% endfor %}
+                                    </div>
+
+                                    {% for row in not_allowed_overtime_rows %}
+                                    <div class="policy">
+                                        {% for col, row_ in zip(not_allowed_overtime_columns, row) %}
+                                        <span>{{ row_ }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{%  else  %}
+<div class="row">
+    <div class="col-12 mb-4">
+
+
+        <div class="card">
+            <div class="card-body pb-3">
+                <img class="center" src="/static/assets/img/audit4.gif" alt="Pass">
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endif %}
+
+<p id="demo"></p>
+{% endblock content %}
+
+
+{% block js %}
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ar.min.js"></script>
+
+<script src="/static/assets/js/index.js"></script>
+
+
+<script type="text/javascript">
+    //Tabs script \\
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+
+    // hide and show tables based on checked checkbox
+    $(document).ready(function () {
+        $('input[type="checkbox"]').click(function () {
+            var inputValue = $(this).attr("value");
+            $("." + inputValue).toggle();
+        });
+    });
+
+    // Script to disable deduction generate report button if all checkbox switchoff
+    var DeducButtonName = document.getElementById("DeducConfirmButton").name;
+    if (DeducButtonName == "DeductionReport") {
+        var checkBoxes = $('.DeducCheckBox');
+        checkBoxes.change(function () {
+            $('#DeducConfirmButton').prop('disabled', checkBoxes.filter(':checked').length < 1);
+        });
+        checkBoxes.change(); // or add disabled="true" in the HTML
+    }
+    ;
+
+
+    // Script to disable Employee information generate report button if all checkbox switched off
+    var EmpInfButtonName = document.getElementById("EmployeeInfoButton").name;
+    if (EmpInfButtonName == "EmployInfoReport") {
+        var checkBoxes1 = $('.infoCheckbox');
+        checkBoxes1.change(function () {
+            $('#EmployeeInfoButton').prop('disabled', checkBoxes1.filter(':checked').length < 1);
+        });
+        checkBoxes1.change(); // or add disabled="true" in the HTML
+    }
+    ;
+
+
+    // Script to disable deduction generate report button if all checkbox switchoff
+    var DeducButtonName = document.getElementById("DeducConfirmButton").name;
+    if (DeducButtonName == "DeductionReport") {
+        var checkBoxes = $('.DeducCheckBox');
+        checkBoxes.change(function () {
+            $('#DeducConfirmButton').prop('disabled', checkBoxes.filter(':checked').length < 1);
+        });
+        checkBoxes.change(); // or add disabled="true" in the HTML
+    }
+    ;
+
+    // Script to disable alloawnce generate report button if all checkbox switchoff
+    var AllowButtonName = document.getElementById("AllowConfirmButton").name;
+    if (AllowButtonName == "AllowanceReport") {
+        var checkBoxes2 = $('.AllowCheckBox');
+        checkBoxes2.change(function () {
+            $('#AllowConfirmButton').prop('disabled', checkBoxes2.filter(':checked').length < 1);
+        });
+        checkBoxes2.change(); // or add disabled="true" in the HTML
+    }
+    ;
+
+
+    // Script to disable overtime generate report button if all checkbox switchoff
+    var OvertimeButtonName = document.getElementById("EmployeeOvertimeButton").name;
+    if (OvertimeButtonName == "EmployOvertimeReport") {
+        var checkBoxes3 = $('.overtimeCheckbox');
+        checkBoxes3.change(function () {
+            $('#EmployeeOvertimeButton').prop('disabled', checkBoxes3.filter(':checked').length < 1);
+        });
+        checkBoxes3.change(); // or add disabled="true" in the HTML
+    }
+    ;
+
+
+</script>
+
+
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ar.min.js"></script>
+
+<script src="/static/assets/js/index.js"></script>
+
+<script type="text/javascript">
+    // this section to show uplode file based on radio button
+    $(document).ready(function () {
+        $('input[type="radio"]').click(function () {
+            var inputValue = $(this).attr("value");
+            var targetBox = $("." + inputValue);
+            $(".selectt1").not(targetBox).hide();
+            $(targetBox).show();
+            // {#alert("Radio button " + inputValue + " is selected");#}
+        });
+
+        $(document).ready(function () {
+            $('input[name="options"]:checked').trigger('click');
+        });
+    });
+</script>
+
+
+<script>
+    $('#myFormId').validate({
+        ignore: ".hidden"
+    });
+
+
+</script>
+
+<script>
+    let modal = new bootstrap.Modal(document.querySelector('#ModalCenter1'), {backdrop: 'static', keyboard: false});
+    modal.toggle();
+
+</script>
+
+<script>
+    let modal2 = new bootstrap.Modal(document.querySelector('#ModalCenter2'), {backdrop: 'static', keyboard: false});
+    modal2.toggle();
+
+</script>
+
+<script>
+    let modal3 = new bootstrap.Modal(document.querySelector('#ModalCenter3'), {backdrop: 'static', keyboard: false});
+    modal3.toggle();
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('.js-multiple').select2();
+        $("#loadImgDate").hide();
+    });
+</script>
+
+
+<!--    This script tow show loading image once click on start auditing button -->
+<script>
+    function Start_Auditing() {
+        document.querySelector('#GenerateReport').disabled = true;
+        document.querySelector('#UploadMaster').disabled = true;
+        document.querySelector('#UploadPayroll').disabled = true;
+        $("#loadImgDate").show();
+    }
+
+</script>
+
+
+<script>
+    $("#selectAllemployeeinfo").click(function () {
+        $(".infoCheckbox").prop("checked", $(this).prop("checked"));
+    });
+
+    $(".infoCheckbox").click(function () {
+        if (!$(this).prop("checked")) {
+            $("#selectAllemployeeinfo").prop("checked", false);
+        }
+    });
+
+    $("#selectAlldeduc").click(function () {
+        $(".DeducCheckBox").prop("checked", $(this).prop("checked"));
+    });
+
+    $(".DeducCheckBox").click(function () {
+        if (!$(this).prop("checked")) {
+            $("#selectAlldeduc").prop("checked", false);
+        }
+    });
+
+
+    $("#selectAllAllow").click(function () {
+        $(".AllowCheckBox").prop("checked", $(this).prop("checked"));
+    });
+
+    $(".AllowCheckBox").click(function () {
+        if (!$(this).prop("checked")) {
+            $("#selectAllAllow").prop("checked", false);
+        }
+    });
+
+
+    $("#selectAllOvertime").click(function () {
+        $(".overtimeCheckbox").prop("checked", $(this).prop("checked"));
+    });
+
+    $(".overtimeCheckbox").click(function () {
+        if (!$(this).prop("checked")) {
+            $("#selectAllOvertime").prop("checked", false);
+        }
+    });
+    jackHarnerSig();
+
+</script>
+
+
+{% endblock js %}

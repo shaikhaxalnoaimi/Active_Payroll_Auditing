@@ -1,0 +1,377 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Manage Files {% endblock %}
+
+{% block content %}
+<!--    Message if the file deleted successfuly (master data)-->
+{% if file_deleted1==True %}
+<div class="alert alert-dismissible" style="background-color:#d4edda; color:#155724; " role="alert">
+    <span><b>File/s Deleted Successfuly!</b></span>
+    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+<!--    Message if thry to delete before select (no need button swill be disabled if no select)-->
+{% if selected_file1==False %}
+<div class="alert alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+    <span><b>Please select at least one file to delete!</b></span>
+    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+
+
+
+<!--######################################################################################-->
+<!--#################### Tables for all employee master files uploaded by user############-->
+<!--######################################################################################-->
+
+<div class="row">
+    <div class="col-12 col-md-12">
+
+
+        <div class="card">
+            <div class='container2'>
+                <div class='wood-text'>Manage Employee Uploaded Files</div>
+            </div>
+
+            <div class="card-body pb-3 scroll2">
+                <form method="POST" enctype="multipart/form-data">
+                               <!--file name-->
+                                <div class="col-12 col-md-12">
+                                    <div class=" d-flex">
+                                            <div class="selectt1 option1">
+                                                <div class="col-10">
+                                                    <input type="text" class="myInput" id="myInput" onkeyup="myFunction()"
+                                                           placeholder="Search..."
+                                                           title="Type in a name">
+                                                </div>
+                                            </div>
+<!-- Added class="myInput" -->
+                                            <div class="selectt1 option2">
+                                                <div class="col-10">
+                                                    <input type="text" class="myInput" id="myInput2" onkeyup="myFunction2()"
+                                                           placeholder="Search..."
+                                                           title="Type in a name">
+                                                </div>
+                                            </div>
+<!-- Added class="myInput" -->
+                                            <div class="selectt1 option3">
+                                                <div class="col-10">
+                                                    <input type="text" class="myInput" id="myInput3" onkeyup="myFunction3()"
+                                                           placeholder="Search..."
+                                                           title="Type in a name">
+                                                </div>
+                                            </div>
+                                    </div>
+
+                                </div>
+                    <br>
+                    <div class="row">
+                        {% if full_paths %}
+                        <div class="col-4 col-md-4">
+                            <div class=" d-flex">
+                                <button type="submit" name="submit_button"
+                                        value="delete"
+                                        style="background-color: #e2e3e5; color:#383d41;"
+                                        onclick="return confirm('Are you sure you want to Delete?');"
+                                        id="btnDelete"
+                                        class="btn  d-flex align-items-center justify-content-center m-0">
+                                    <em class="material-icons-round opacity-10">delete</em>&emsp;
+                                    Delete
+                                </button>
+
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-4 col-md-4">
+                            <div class=" d-flex">
+                                <button type="submit" name="submit_button"
+                                        value="delete"
+                                        style="background-color: #e2e3e5; color:#383d41;"
+                                        class="btn  d-flex align-items-center justify-content-center m-0"
+                                        id="deleteButton">
+                                    <em class="material-icons-round opacity-10">delete</em>&emsp;
+                                    Delete
+                                </button>
+
+                            </div>
+                        </div>
+                        {% endif %}
+
+                         <!------------------which form to open------------------->
+                        <div class="col-4 col-md-4">
+                            <input type="radio" name="options" id="option1" value="option1" checked="checked"> All Files </input>
+                            <input type="radio" name="options" id="option2" value="option2"> Master Files </input>
+                            <input type="radio" name="options" id="option3" value="option3"> Payroll Files</input>
+                        </div>
+
+<!-- Added in-line style -->
+                        <div class="col-4 col-md-4" style="text-align: right;">
+                            <input type="checkbox" name="checkAll" id="checkAll"/> Select All
+                        </div>
+                </div>
+                <!--show master all files (payroll & master) -->
+                <div class="table-responsive">
+                    <div class="policy-container">
+                        <div class="policy-table">
+                            <br>
+                              <div class="selectt1 option1">
+                                <table id="myTable" class="myTable">
+                                        {% for row in full_paths %}
+                                            <tr {{row .index}}>
+                                                <td>{{ row }}</td>
+                                                <td><input type="checkbox" name="checkbox"
+                                                           value="{{row}}" class="chkBox"></td>
+                                            </tr>
+                                        {% endfor %}
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--filter the table to show master files only -->
+                <div class="table-responsive">
+                    <div class="policy-container">
+                        <div class="policy-table">
+                            <br>
+                              <div class="selectt1 option2">
+                                <table id="myTable2" class="myTable">
+
+                                        {% for row in full_paths1 %}
+                                            <tr {{row .index}}>
+                                                <td>{{ row }}</td>
+                                                <td><input type="checkbox" name="checkbox"
+                                                           value="{{row}}" class="chkBox"></td>
+                                            </tr>
+                                        {% endfor %}
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                 <!--filter the table to show payroll files only -->
+                <div class="table-responsive">
+                    <div class="policy-container">
+                        <div class="policy-table">
+                            <br>
+                              <div class="selectt1 option3">
+                                <table id="myTable3" class="myTable">
+
+                                        {% for row in full_paths2 %}
+                                            <tr {{row .index}}>
+                                                <td>{{ row }}</td>
+                                                <td><input type="checkbox" name="checkbox"
+                                                           value="{{row}}" class="chkBox"></td>
+                                            </tr>
+                                        {% endfor %}
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<br>
+
+
+{% endblock content %}
+
+
+{% block js %}
+
+<!--Select all script (Master)-->
+<script>
+    $(document).ready(function () {
+        $('#checkAll').click(function (event) {
+            if (this.checked) {
+                // Iterate each checkbox
+                $(':checkbox:visible').each(function () {
+                    this.checked = true;
+                });
+            } else {
+                $(':checkbox:visible').each(function () {
+                    this.checked = false;
+                });
+            }
+        });
+        $('.checkbox:visible').click(function () {
+            if ($('.checkbox:checked').length == $('.checkbox:visible').length) {
+                $('#checkAll').prop('checked', true);
+            } else {
+                $('#checkAll').prop('checked', false);
+            }
+        });
+    });
+</script>
+
+<!--Search function that filters the all files-->
+<script>
+    function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        $(':checkbox').prop('checked', false);
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+        var checkBoxes = $(':checkbox');
+        checkBoxes.change(function () {
+            $('#btnDelete').prop('disabled', checkBoxes.filter(':checked').length < 1);
+        });
+        checkBoxes.change(); // or add disabled="true" in the HTML
+    }
+</script>
+
+<!--Search function that filters the master files-->
+<script>
+    function myFunction2() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput2");
+        $(':checkbox').prop('checked', false);
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable2");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+        var checkBoxes = $(':checkbox');
+        checkBoxes.change(function () {
+            $('#btnDelete').prop('disabled', checkBoxes.filter(':checked').length < 1);
+        });
+        checkBoxes.change(); // or add disabled="true" in the HTML
+    }
+</script>
+
+
+<!--Search function that filters the master files-->
+<script>
+    function myFunction3() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput3");
+        $(':checkbox').prop('checked', false);
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable3");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+        var checkBoxes = $(':checkbox');
+        checkBoxes.change(function () {
+            $('#btnDelete').prop('disabled', checkBoxes.filter(':checked').length < 1);
+        });
+        checkBoxes.change(); // or add disabled="true" in the HTML
+    }
+</script>
+
+<!--Disable button if all checkboxes are unchecked (Master)-->
+<script>
+    var checkBoxes = $(':checkbox');
+    checkBoxes.change(function () {
+        $('#btnDelete').prop('disabled', checkBoxes.filter(':checked').length < 1);
+    });
+    checkBoxes.change(); // or add disabled="true" in the HTML
+</script>
+
+
+
+<!--Check toggle of checkboxes (Master)-->
+<script>
+    function checkToggle(event) {
+        var changed = event.target,
+            selectAll = document.getElementById('checkAll'),
+            checkboxes = Array.prototype.slice.call(
+                this.querySelectorAll('input[type=checkbox]')
+            ).filter(function (check) {
+                return check !== selectAll;
+            });
+
+        if (changed === selectAll) {
+            checkboxes.forEach(function (check) {
+                check.checked = selectAll.checked;
+            });
+        } else {
+            var allChecked = checkboxes.filter(function (check) {
+                return check.checked;
+            }).length === checkboxes.length;
+            selectAll.checked = allChecked;
+        }
+    }
+
+    var tableElement = document.querySelector('table');
+    tableElement.addEventListener('change', checkToggle);
+
+</script>
+
+<!--filtring ths table -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ar.min.js"></script>
+<script src="/static/assets/js/index.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input[type="radio"]').click(function () {
+            var inputValue = $(this).attr("value");
+            var targetBox = $("." + inputValue);
+            $(".selectt1").not(targetBox).hide();
+            $(targetBox).show();
+            // alert("Radio button " + inputValue + " is selected");
+        });
+
+        $(document).ready(function () {$('input[name="options"]:checked').trigger('click');});
+    });
+</script>
+
+
+//<!-- Added this function -->
+<script>
+    $('input[type="radio"]').click(function() {
+        if( $('input[type="radio"]').is(':checked') ) {
+            $('input[type="checkbox"]').prop("checked", false );
+        }
+    });
+    // $('table').addClass('table table-striped');
+</script>
+{% endblock js %}
