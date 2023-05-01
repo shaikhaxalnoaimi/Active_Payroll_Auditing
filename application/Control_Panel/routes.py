@@ -42,6 +42,7 @@ def admin_panel():
     keywords_form = KeywrodsForm()
     # initialize keywords_label drop down list
     keyword_labels = Fetch_Lable_Keywords("MASTER")
+
     keywords_form.keyword_label.choices = [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind] ) for ind in keyword_labels.index]
     #initialize Keywords Table
     all_data = Fetch_All_Keywords("MASTER", "EMPLOYEE_NAME")  # based on selected label
@@ -140,7 +141,9 @@ def add_position():
     exits = ''
     if request.method == 'POST':
         pname = request.form['position']
+        print('the position name:' + pname)
         check_message = Insert_Data_Positions(pname)
+        # print('recived mesage:' + check_message)
         if check_message == 'duplicate':
             exits = True
         elif check_message == 'invalid':

@@ -13,7 +13,7 @@ Total : 15 files,  2043 codes, 1261 comments, 650 blanks, all 3954 lines
 | :--- | :--- | ---: | ---: | ---: | ---: |
 | [application/Control_Panel/__init__.py](/application/Control_Panel/__init__.py) | Python | -6 | -11 | -7 | -24 |
 | [application/Control_Panel/forms.py](/application/Control_Panel/forms.py) | Python | -9 | -1 | -5 | -15 |
-| [application/Control_Panel/keywords_db_Queries.py](/application/Control_Panel/keywords_db_Queries.py) | Python | -120 | -79 | -50 | -249 |
+| [application/Control_Panel/keywords_db_Queries.py](/application/Control_Panel/keywords_db_Queries1.py) | Python | -120 | -79 | -50 | -249 |
 | [application/Control_Panel/position_titles_db_Quires.py](/application/Control_Panel/position_titles_db_Quires.py) | Python | -92 | -64 | -42 | -198 |
 | [application/Control_Panel/routes.py](/application/Control_Panel/routes.py) | Python | -149 | -70 | -58 | -277 |
 | [application/Control_Panel/validation.py](/application/Control_Panel/validation.py) | Python | -14 | -16 | -11 | -41 |

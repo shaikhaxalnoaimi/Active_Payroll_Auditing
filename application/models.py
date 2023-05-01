@@ -17,7 +17,7 @@ The file starts with importing necessary modules and packages.
 The User class is defined with attributes such as user_id, username, password, created_at, and last_login. It also has a relationship with the Role class and implements the UserMixin class from Flask_Login.
 The Role class is defined with attributes such as role_id and name.
 The UserRoles class is defined with attributes such as id, user_id, and role_id. It also has a relationship with the User and Role classes.
-The system_keywords class is defined with attributes such as kid, Keyword, Label, File_name, created_at, updated_at, created_by, and updated_by. It also has methods to fetch, add, update, and delete keywords from the database.
+The keywords class is defined with attributes such as kid, Keyword, Label, File_name, created_at, updated_at, created_by, and updated_by. It also has methods to fetch, add, update, and delete keywords from the database.
 The system_high_ranking_positions class is defined with attributes such as pid, position_title, created_at, updated_at, created_by, and updated_by. It also has methods to fetch, add, update, and delete positions from the database.
 The user_logs class is defined with attributes such as id, user_id, log_type, log_details, and created_at. It also has a method to add logs to the database.
 
@@ -154,7 +154,7 @@ class UserRoles(db.Model):
 
 
 
-class system_keywords(db.Model):
+class keywords(db.Model):
     kid = db.Column(db.Integer, primary_key=True)
     Keyword = db.Column(db.String(100), nullable=False)
     Label = db.Column(db.String(100), nullable=False)
@@ -174,25 +174,25 @@ class system_keywords(db.Model):
         self.updated_by = updated_by
 
     def Fetch_All_Keywords_dataframe(self):
-        return pd.DataFrame(db.session.query(system_keywords).all())
+        return pd.DataFrame(db.session.query(keywords).all())
 
 
     def Fetch_File_Name_by_Id(id):
-        return db.session.query(system_keywords).filter_by(kid=id).first().File_name
+        return db.session.query(keywords).filter_by(kid=id).first().File_name
 
     def Fetch_All_labels_by_File_Name_dataframe(File_name):
-        return pd.DataFrame(db.session.query(system_keywords).filter_by(File_name=File_name).all())
+        return pd.DataFrame(db.session.query(keywords).filter_by(File_name=File_name).all())
 
     def Fetch_All_labels_by_File_Name_And_Keyword_dataframe(File_name, Keywords):
-        return pd.DataFrame(db.session.query(system_keywords).filter_by(File_name=File_name, Keyword=Keywords).all())
+        return pd.DataFrame(db.session.query(keywords).filter_by(File_name=File_name, Keyword=Keywords).all())
 
     def Check_Keyword_Exist(Keywords, File_name):
-        return db.session.query(system_keywords).filter_by(Keyword=Keywords, File_name=File_name).first()
+        return db.session.query(keywords).filter_by(Keyword=Keywords, File_name=File_name).first()
 
     def Add_Keyword_check_not_exist(Keyword, Label, File_name, created_by):
-        if system_keywords.Check_Keyword_Exist(Keyword, File_name) is None:
+        if keywords.Check_Keyword_Exist(Keyword, File_name) is None:
 
-            new_keyword = system_keywords(sanitize_input(Keyword), Label, File_name, datetime.datetime.now(), None, created_by, None)
+            new_keyword = keywords(sanitize_input(Keyword), Label, File_name, datetime.datetime.now(), None, created_by, None)
             db.session.add(new_keyword)
             db.session.commit()
             duplication = 'True'
@@ -203,12 +203,12 @@ class system_keywords(db.Model):
 
 
     def Update_Keyword_check_exist(Keywords, Label, File_name, updated_by):
-        if system_keywords.Check_Keyword_Exist(Keywords, File_name) is not None:
-            db.session.query(system_keywords).filter_by(Keyword=Keywords, File_name=File_name).update(
-                {system_keywords.Label: Label, system_keywords.updated_at: datetime.now(),
-                 system_keywords.keyword: Keywords,
-                 system_keywords.File_name: File_name,
-                 system_keywords.updated_by: updated_by})
+        if keywords.Check_Keyword_Exist(Keywords, File_name) is not None:
+            db.session.query(keywords).filter_by(Keyword=Keywords, File_name=File_name).update(
+                {keywords.Label: Label, keywords.updated_at: datetime.now(),
+                 keywords.keyword: Keywords,
+                 keywords.File_name: File_name,
+                 keywords.updated_by: updated_by})
             db.session.commit()
             duplication = 'no-duplicate'
         else:
@@ -217,33 +217,33 @@ class system_keywords(db.Model):
         return duplication
 
     def Update_keyword_by_id(id, Keywords, Label, File_name, updated_by):
-        duplication = system_keywords.Update_Keyword_check_exist(Keywords, Label, File_name,updated_by)
+        duplication = keywords.Update_Keyword_check_exist(Keywords, Label, File_name,updated_by)
         if duplication == 'no-duplicate':
-            db.session.query(system_keywords).filter_by(kid=id).update(
-                {system_keywords.Label: Label.upper(),
-                 system_keywords.updated_at: datetime.now(),
-                 system_keywords.File_name: File_name.upper(),
-                 system_keywords.keyword: Keywords.upper(),
-                 system_keywords.updated_by: updated_by})
+            db.session.query(keywords).filter_by(kid=id).update(
+                {keywords.Label: Label.upper(),
+                 keywords.updated_at: datetime.now(),
+                 keywords.File_name: File_name.upper(),
+                 keywords.keyword: Keywords.upper(),
+                 keywords.updated_by: updated_by})
             db.session.commit()
         return duplication
 
 
     def Fetch_all_label_by_kid_dataframe(kid):
-        return pd.DataFrame(db.session.query(system_keywords).filter_by(kid=kid).all())
+        return pd.DataFrame(db.session.query(keywords).filter_by(kid=kid).all())
 
 
     def Delete_Keyword_by_Id(id):
-        db.session.query(system_keywords).filter_by(kid=id).delete()
+        db.session.query(keywords).filter_by(kid=id).delete()
         db.session.commit()
         return True
 
     def Fetch_keyword_by_File_Name_list(File_names):
-        return db.session.query(system_keywords).filter_by(File_name=File_names).all()
+        return db.session.query(keywords).filter_by(File_name=File_names).all()
 
 
     def Fetch_keyword_by_File_Name_and_Label_list(File_names, Label):
-        return db.session.query(system_keywords).filter_by(File_name=File_names, Label=Label).all()
+        return db.session.query(keywords).filter_by(File_name=File_names, Label=Label).all()
 
 
 

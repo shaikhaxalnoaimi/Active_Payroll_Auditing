@@ -64,13 +64,10 @@ def login():
         # username=sanitize_input(username)
         password = request.form['password']
 
-        print(username)
-        print(password)
 
         # Locate user
         user = User.query.filter_by(username=username).first()
 
-        print(user)
         session['login_attempts'] = session.get('login_attempts', 0) + 1
         session['timestamp'] = session.get('timestamp', datetime.now(pytz.utc))
         # print(session['login_attempts'])

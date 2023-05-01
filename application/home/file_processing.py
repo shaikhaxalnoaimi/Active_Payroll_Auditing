@@ -11,7 +11,7 @@ flask_login module
 os module
 glob module
 pandas module
-Fetch_Keywords function from keywords_db_Queries.py module
+Fetch_Keywords function from keywords_db_Queries1.py module
 app instance from app.py module
 
 
@@ -40,7 +40,7 @@ import pandas as pd
 from app import app
 
 #eg. folder name = master_data
-from application.Control_Panel.keywords_db_Queries import Fetch_keywords_Without_Label,Fetch_keywords_with_lable
+from application.Control_Panel.keywords_db_Queries1 import Fetch_keywords_Without_Label,Fetch_keywords_with_lable
 
 
 def get_uploads_folder(folder_name):

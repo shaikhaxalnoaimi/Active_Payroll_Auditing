@@ -46,7 +46,6 @@ with app.app_context():
 
     # =================================================
     # Keywords
-    # Keywords
     # =================================================
     # Read the CSV file and insert the data into the database
     data = pd.read_csv('users.csv')
