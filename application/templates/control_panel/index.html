@@ -1,0 +1,248 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Admin Panel {% endblock %}
+<link rel="stylesheet" type="text/css" href="/static/assets/css/jquery.dataTables.css"/>
+{% block content %}
+<!--######################################################################################-->
+<!--#################### This section related MANAGE THE  KEYWORDS ############-->
+<!--######################################################################################-->
+
+<div class="row" id="MASTER" name="MASTER" value="MASTER">
+    <div class="col-12 col-md-12">
+
+
+        <div class="card">
+
+            <div class='container2'>
+                <div class='wood-text'> Manage Files Keywords</div>
+            </div>
+            <!--            notification message if the keyword deleted successfully -->
+            {% if deleted==True %}
+            <div class="alert  alert-dismissible " style="background-color:#d4edda; color:#155724;" role="alert">
+                <span><b>The keyword deleted successfully!</b></span>
+                <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert"
+                        aria-label="Close">
+                    <span aria-hidden="true" style="color:#155724;">×</span>
+                </button>
+            </div>
+            {% endif %}
+
+            <div class="card-body pb-3 scroll4">
+
+                <div class="row">
+                    <div class="col-10 mb-4">
+                        <form method="post">
+                            {{keywords_form.csrf_token}}
+                            {{keywords_form.file_name(class="form-select", style="width:fit-content; display:inline")}}
+                            {{keywords_form.keyword_label(class="form-select", style="width:fit-content; display:inline")}}
+                            <input type="submit" id="form-btn" style="display:none" class="" value="Search">
+                        </form>
+                    </div>
+
+
+                    <div class="col-2 mb-4">
+                        <p class='text-right'>
+                            <a href='{{url_for("control_panel.add_keywords")}}'
+                               style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
+                               class="btn btn-success align-items-center justify-content-center m-0">
+                                <!--                      <em class="material-icons-round opacity-10">add</em>-->
+                                Add New
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <table class="hover row-border table-bordered" id="myTable1" style="width:100%;">
+                    <thead>
+                    {% for col in all_data_mk_columns %}
+                    <th>{{col}}</th>
+                    {%endfor%}
+                    </thead>
+                    <tbody>
+                    {% for row in all_data_mk_rows %}
+                    <tr>
+                        {% for col, row_ in zip(all_data_mk_columns, row) %}
+                        <td>{{ row_ }}</td>
+
+                        {%endfor%}
+                        <td>
+                            <a href='{{url_for("control_panel.edit_keyword",uid=row[0])}}'
+                               style="width: 12px; background-color:#cce5ff; color:#004085; border-color: #b8daff;"
+                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-secondary '>
+                                <em class="material-icons-round opacity-10">edit</em>
+                            </a>
+                        </td>
+                        <td>
+
+                            <a type="submit"
+                               href='{{url_for("control_panel.delete_keyword",uid=row[0],selected_value=row[2],fname=row[1] )}}'
+                               style="width: 12px; background-color:#f8d7da; color:#721c24; border-color: #f5c6cb;"
+                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-danger'
+                               onclick='return confirm("Are You Sure You Want To Delete This Keyword?")'>
+                                <em class="material-icons-round opacity-10">delete</em></a>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!--######################################################################################-->
+<!--#################### This section related MANAGE THE HIGH RANKING POSITIONS ############-->
+<!--######################################################################################-->
+<br>
+<div class="row" id="POSITIONS" name="POSITIONS" value="POSITIONS">
+    <div class="col-12 col-md-12">
+
+
+        <div class="card">
+
+            <div class='container2'>
+                <div class='wood-text'> Manage High Ranking Positions</div>
+            </div>
+            <!--            notification message if the keyword deleted successfully -->
+
+            <div class="card-body pb-3 scroll3">
+
+                <div class="row">
+                    <div class="col-12 mb-4">
+                        <p class='text-right'>
+                            <a href='{{url_for("control_panel.add_position")}}'
+                               style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
+                               class="btn btn-success align-items-center justify-content-center m-0">
+                                <!--                      <em class="material-icons-round opacity-10">add</em>-->
+                                Add New
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <!--                High Ranking Positions Table-->
+
+                <table class="hover row-border table-bordered" id="myTable" style="width:100%;">
+                    <thead>
+                    {% for col in all_data_positions_columns %}
+                    <th>{{col}}</th>
+                    {%endfor%}
+                    </thead>
+                    <tbody>
+                    {% for row in all_data_positions_rows %}
+                    <tr>
+                        {% for col, row_ in zip(all_data_positions_columns, row) %}
+                        <td>{{ row_ }}</td>
+
+                        {%endfor%}
+                        <td>
+                            <a href='{{url_for("control_panel.edit_position",uid=row[0])}}'
+                               style="width: 12px; background-color:#cce5ff; color:#004085; border-color: #b8daff;"
+                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-secondary '>
+                                <em class="material-icons-round opacity-10">edit</em>
+                            </a>
+                        </td>
+                        <td>
+
+                            <a type="submit" href='{{url_for("control_panel.delete_position",uid=row[0])}}'
+                               style="width: 12px; background-color:#f8d7da; color:#721c24; border-color: #f5c6cb;"
+                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-danger'
+                               onclick='return confirm("Are You Sure You Want To Delete This Position?")'>
+                                <em class="material-icons-round opacity-10">delete</em></a>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block js %}
+<script type="text/javascript"
+        src="/static/assets/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript"
+        src="/static/assets/js/bootstrap-datepicker.ar.min.js"></script>
+<script type="text/javascript" charset="utf8"
+        src="/static/assets/js/jquery.dataTables.js"></script>
+<script src="/static/assets/js/index.js"></script>
+
+<script>
+    let file_name_select = document.getElementById('file_name');
+    let keyword_label_select = document.getElementById('keyword_label');
+    window.onload = function () {
+        file_name_select.onchange = function () {
+            file_name = this.value;
+            // alert(file_name);
+            fetch('/label/' + file_name).then(function (response) {
+                response.json().then(function (data) {
+                    let optionHTML = '';
+
+                    for (let label of data.labels) {
+                        optionHTML += '<option value="' + label.id + '">' + label.label + '</option>';
+                        // alert(optionHTML);
+                    }
+
+                    keyword_label_select.innerHTML = optionHTML;
+                    $('#form-btn').click();
+                });
+            });
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            columns: [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+            ],
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#myTable1').DataTable();
+    });
+</script>
+
+
+<!-- customize css  -->
+<script>
+    //$('#form-btn').hide();
+    function post() {
+        $('#keyword_label').on('change',function() {
+            $('#form-btn').click();
+        });
+    }
+
+    $('#keyword_label').click(function() {
+        post();
+    });
+
+</script>
+
+{% endblock js %}
+
+
+
+
+
+

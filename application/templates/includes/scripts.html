@@ -1,0 +1,90 @@
+<!-- Datatable -->
+<script src="/static/assets/js/jquery-3.5.1.js"></script>
+<script src="/static/assets/js/jquery.dataTables.min.js"></script>
+<script src="/static/assets/js/dataTables.select.min.js"></script>
+<script src="/static/assets/js/dataTables.buttons.min.js"></script>
+<script src="/static/assets/js/jszip.min.js"></script>
+<script src="/static/assets/js/pdfmake.min.js"></script>
+<script src="/static/assets/js/vfs_fonts.js"></script>
+<script src="/static/assets/js/buttons.html5.min.js"></script>
+<script src="/static/assets/js/buttons.print.min.js"></script>
+<script src="/static/assets/js/buttons.colVis.min.js"></script>
+
+<!-- Forms Validation -->
+<script src="/static/assets/js/jquery.validate.min.js"></script>
+<script src="/static/assets/js/additional-methods.min.js"></script>
+<script src="/static/assets/js/messages_ar.min.js"></script>
+
+<script src="/static/assets/js/select2.min.js"></script>
+
+
+
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+
+
+<script>
+
+    function seen(notification) {
+        $.ajax({
+            url: '/notification_viewed',
+            data: JSON.stringify(notification),
+            contentType: 'application/json;charset=UTF-8',
+            type: 'POST',
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    // function notification_viewed() {
+    //     $.getJson('/notification_viewed',
+    //         function (data) {
+    //
+    //         }
+    //     );
+    // }
+
+    // $(function () {
+    //     $('#form').on('submit', function (e) {
+    //         $.ajax({
+    //             url: '/notification_viewed',
+    //             data: $('form').serialize(),
+    //             type: 'POST',
+    //         })
+    //         e.preventDefault();
+    //     });
+    // });
+    //
+    // $(function () {
+    //     $("#viewedBtn").click(function (event) {
+    //
+    //         $.ajax({
+    //             url: '/notification_viewed',
+    //             data: $('form').serialize(),
+    //             type: 'POST',
+    //             success: function (response) {
+    //                 console.log(response);
+    //             },
+    //             error: function (error) {
+    //                 console.log(error);
+    //             }
+    //         });
+    //     });
+    // });
+</script>
+
+<!-- Github buttons -->
+<script async defer src="/static/assets/js/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="/static/assets/js/material-dashboard.min.js"></script>

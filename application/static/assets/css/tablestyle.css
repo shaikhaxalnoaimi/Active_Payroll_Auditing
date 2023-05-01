@@ -1,0 +1,89 @@
+.myInput {
+  background-image: url('../img/glass.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+.myTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+.myTable th, .myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+.myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.myTable tr.header, .myTable tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+
+.policy-table {
+  color: grey;
+  text-align: center;
+  padding: 0rem 0.5rem;
+  /*font-size: larger;*/
+}
+
+.headings, .policy {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-bottom: 1em;
+  padding: 5px;
+}
+
+.heading {
+  flex-basis: 33.333%;
+  font-weight: bold;
+  /*font-size: larger;*/
+}
+
+.heading2 {
+  font-weight: bold;
+  /*font-size: larger;*/
+}
+
+
+.policy {
+  padding-left: 25px;
+  border-radius: 2em;
+  background-color: white;
+  /*margin-bottom: 20px;*/
+  -moz-box-shadow: 0 0 3px grey;
+  -webkit-box-shadow: 0 0 3px grey;
+  box-shadow: 0 0 5px grey;
+}
+
+span {
+  flex-basis: 33.333%;
+}
+
+.table-content1 {
+  margin:2px;
+  margin-left: 10px;
+  text-align: left;
+}
+
+
+
+a {
+  text-decoration: none;
+  color: #4c4c4c;
+}

@@ -1,0 +1,69 @@
+{% extends "/control_panel/index.html" %}
+{% block title %} Admin Panel {% endblock %}
+
+{%block model%}
+
+{% endblock%}
+
+
+{% block content %}
+
+<!-- Modal -->
+<div class="modal fade" id="ModalCenter2" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form method='post' action='{{url_for("control_panel.edit_position",uid=uid)}}'>
+                  <div class="modal-header">
+                             <div class='container2'>
+                    <div class='wood-text'> Edit Position</div>
+                  </div>
+
+                    <a href="{{url_for('control_panel.admin_panel')}}">
+                      <span aria-hidden="true" style="font-size:30px;">&times;</span>
+                    </a>
+                  </div>
+
+
+                  <div class="modal-body">
+<!--                      pop up notification if required-->
+                    {% include '/includes/notificationsMessage.html' %}
+
+
+                          <div class='form-group' style="padding-right: 5px;">
+                            <input type='text' value="{{current_position}}" name='position1' required class='form-control' >
+                          </div>
+
+
+
+                  </div>
+
+                  <div class="modal-footer">
+                    <input type='submit' value='Update' style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;" class='btn btn-primary'>
+                    <a href="{{url_for('control_panel.admin_panel')}}" class="btn btn-secondary" style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;" >Close</a>
+                  </div>
+                </form>
+            </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{%block js%}
+ <!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="/static/assets/js/jquery-3.3.1.slim.min.js" ></script>
+<script src="/static/assets/js/popper.min.js" ></script>
+<script src="/static/assets/js/bootstrap.min.js" ></script>
+
+<script>
+  let modal = new bootstrap.Modal( document.querySelector('#ModalCenter2'), { backdrop: 'static', keyboard: false } );
+  modal.toggle();
+</script>
+
+
+
+{%endblock js%}
+
+
+
+

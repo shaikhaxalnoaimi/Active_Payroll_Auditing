@@ -1,0 +1,114 @@
+<!--######################################################################################-->
+<!--################################Alert Messages #######################################-->
+<!--######################################################################################-->
+<!--    Message if the file not the correct one (overtime payroll format)-->
+    {% if error==True %}
+        <div class="alert alert-danger alert-dismissible text-white" role="alert">
+            <span><b>Sorry! The uploaded file does not follow the required standards! Please try another file!</b></span>
+            <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+    {% endif %}
+
+
+<!--    Message if the file already uploaded before (overtime payroll format)-->
+    {% if RecivedMessage=="exists" %}
+    <div class="alert alert-info alert-dismissible text-white" role="alert">
+        <span><b>This file exists already!</b></span>
+        <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    {% endif %}
+
+<!--    Message if the file uploaded successfuly (master data)-->
+    {% if RecivedMessage=="success" %}
+    <div class="alert alert-success alert-dismissible text-white" role="alert">
+        <span><b>File uploaded Successfuly!</b></span>
+        <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    {% endif %}
+
+
+<!--    Message if the file uploaded successfuly (master data)-->
+    {% if RecivedMessage=="incorrect" %}
+    <div class="alert alert-warning alert-dismissible text-white" role="alert">
+        <span><b>Sorry! The columns of the uploaded file does not match required columns! Please try another file!</b></span>
+        <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    {% endif %}
+
+
+<!--######################################################################################-->
+<!-- The validation messages for adding and editing,deleted keywords -->
+<!--######################################################################################-->
+{% if exits==True %}
+<div class="alert  alert-dismissible " style="background-color:#fff3cd; color:#856404;"  role="alert">
+    <span><b>The value already exits!</b></span>
+    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+{% if exits==False %}
+<div class="alert  alert-dismissible " style="background-color:#d4edda; color:#155724;" role="alert">
+    <span><b>The value Added Successfully!</b></span>
+    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+
+{% if exits=='Invalid' %}
+<div class="alert  alert-dismissible " style="background-color:#fff3cd; color:#856404;"  role="alert">
+    <span><b>Invalid input. Only letters with or without underscores are allowed.</b></span>
+    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+{% if updated==False %}
+    <div class="alert  alert-dismissible " style="background-color:#d4edda; color:#155724;" role="alert">
+        <span><b>The value Updated Successfully!</b></span>
+        <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true" style="color:#155724;">×</span>
+        </button>
+    </div>
+{% endif %}
+
+{% if updated=='Invalid' %}
+<div class="alert  alert-dismissible " style="background-color:#fff3cd; color:#856404;"  role="alert">
+    <span><b>Invalid input. Only letters with or without underscores are allowed.</b></span>
+    <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true" style="color:#155724;">×</span>
+    </button>
+</div>
+{% endif %}
+
+
+
+{% if updated==True %}
+    <div class="alert  alert-dismissible " style="background-color:#fff3cd; color:#856404;"  role="alert">
+        <span><b>You trying to update the current value with a value that already exits!</b></span>
+        <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true" style="color:#155724;">×</span>
+        </button>
+    </div>
+{% endif %}
+
+{% if deleted==True %}
+    <div class="alert  alert-dismissible " style="background-color:#d4edda; color:#155724;" role="alert">
+        <span><b>The value deleted successfully!</b></span>
+        <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true" style="color:#155724;">×</span>
+        </button>
+    </div>
+{% endif %}

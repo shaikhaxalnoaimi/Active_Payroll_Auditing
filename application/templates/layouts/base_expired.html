@@ -1,0 +1,130 @@
+<style>
+    body {
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    {#.overlay {#}
+    {#    background: rgba(0, 0, 0, 0) url("http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/footer_lodyas.png") repeat scroll 0 0;#}
+    {#    position: fixed;#}
+    {#    top: 0px;#}
+    {#    left: 0px;#}
+    {#    height: 100%;#}
+    {#    width: 100%;#}
+    {#    z-index: -99999;#}
+
+
+    .trialwrap {
+        width: 60%;
+        margin: 0 auto;
+        padding: 15px;
+        border-radius: 0px;
+    }
+
+    .trialleftended, .trialright {
+        padding: 5%;
+    }
+
+    .trialleftended {
+    width: 15%;
+    background: #ffffff00;
+    text-align: center;
+    color: #fff;
+    text-transform: uppercase;
+    border-radius: 5px 0 0 10px;
+    /* border-top: 2px solid #f47070; */
+    /* border-bottom: 3px solid #c41616; */
+    float: left;
+    }
+
+    .trialright {
+        border-top: 1px solid #f3c390;
+        background: #f9f9f9;
+        border-radius: 0 0 2px 2px;
+        font-weight: 300;
+        width: 65%;
+        float: right;
+    }
+
+    .trialright h1 {
+        padding: 5px 0 0;
+        margin: 0px;
+        font-family: 'Open Sans', sans-serif;
+        color: #43474f;
+    }
+
+    .trialright h2 {
+        padding: 0px;
+        margin-bottom: 30px;
+        margin-top: 0px;
+        font-family: 'Open Sans', sans-serif;
+        color: #43474f;
+        font-size: 24px;
+        font-weight: 500;
+    }
+
+    .stayactivebutton {
+        /*background:#00c596;*/
+        padding: 5px;
+        display: block;
+        margin: 0 auto;
+        border-radius: 2px;
+        padding: 12px 0px;
+        text-align: center;
+    }
+
+    .stayactivebutton a {
+        text-transform: uppercase;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+        letter-spacing: .042em;
+    }
+
+    .trialright h3 {
+        font-weight: 300;
+        color: #43474f;
+    }
+
+    .trialleftended .fa-lock {
+        color: #f9f9f9;
+    }
+
+    .trialleftended .fa-circle {
+        color: #c41616;
+    }
+
+</style>
+
+
+{% extends "layouts/base_auth.html" %}
+
+{% block title %} error 403 {% endblock %}
+
+{% block content %}
+<div class="row justify-content-center h-100 align-items-center" dir="ltr">
+    <div class="col-md-9">
+        <div class="form-input-content text-center">
+            <div class="overlay"></div>
+            <!-- DO NOT INCLUDE THE OVERLAY CODE ABOVE. THIS IS FOR DEMO PURPOSES ONLY. THIS WILL BE A POPUP MODAL USING EXISTING CODE IN PORTAL -->
+            <div class="trialwrap">
+                <div class="trialleftended">
+                    <span class="fa-stack fa-3x">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                      <i class="fa fa-exclamation-triangle fa-stack-1x fa-inverse"></i>
+                    </span>
+                </div>
+                <div class="trialright">
+                    <h1>OH NO!</h1>
+                    <h2>Your free trial has expired.</h2>
+<!--                    <div class="stayactivebutton"><img src="\static\assets\img\Expired.gif" alt="Expired"></div>-->
+                    <div class="">
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
