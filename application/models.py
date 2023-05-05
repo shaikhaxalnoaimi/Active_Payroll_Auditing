@@ -156,13 +156,13 @@ class UserRoles(db.Model):
 
 class keywords(db.Model):
     kid = db.Column(db.Integer, primary_key=True)
-    Keyword = db.Column(db.String(100), nullable=False)
-    Label = db.Column(db.String(100), nullable=False)
-    File_name = db.Column(db.String(100), nullable=False)
+    KEYWORD = db.Column(db.String(100), nullable=False)
+    LABEL = db.Column(db.String(100), nullable=False)
+    FILE_NAME = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
-    created_by = db.Column(db.String(100), nullable=False)
-    updated_by = db.Column(db.String(100), nullable=True)
+    CREATED_BY = db.Column(db.String(100), nullable=True)
+    UPDATED_BY = db.Column(db.String(100), nullable=True)
 
     def __init__(self, Keyword, Label, File_name, created_by, updated_by):
         self.Keyword = Keyword
@@ -177,14 +177,19 @@ class keywords(db.Model):
         return pd.DataFrame(db.session.query(keywords).all())
 
 
+
     def Fetch_File_Name_by_Id(id):
         return db.session.query(keywords).filter_by(kid=id).first().File_name
 
     def Fetch_All_labels_by_File_Name_dataframe(File_name):
-        return pd.DataFrame(db.session.query(keywords).filter_by(File_name=File_name).all())
+        results = pd.DataFrame(db.session.query(keywords.LABEL).filter(keywords.FILE_NAME == File_name).distinct().all())
+        return results
 
-    def Fetch_All_labels_by_File_Name_And_Keyword_dataframe(File_name, Keywords):
-        return pd.DataFrame(db.session.query(keywords).filter_by(File_name=File_name, Keyword=Keywords).all())
+    def Fetch_All_keywords_by_File_Name_And_Labels_dataframe(File_name, Label):
+        result = db.session.query(keywords).filter(keywords.FILE_NAME == File_name, keywords.LABEL == Label).all()
+        return result
+    def Fetch_All_labels_by_File_Name_And_Keyword_dataframe(File_name, keywords):
+        return pd.DataFrame(db.session.query(keywords).filter_by(File_name=File_name, Keyword=keywords).all())
 
     def Check_Keyword_Exist(Keywords, File_name):
         return db.session.query(keywords).filter_by(Keyword=Keywords, File_name=File_name).first()
@@ -205,7 +210,7 @@ class keywords(db.Model):
     def Update_Keyword_check_exist(Keywords, Label, File_name, updated_by):
         if keywords.Check_Keyword_Exist(Keywords, File_name) is not None:
             db.session.query(keywords).filter_by(Keyword=Keywords, File_name=File_name).update(
-                {keywords.Label: Label, keywords.updated_at: datetime.now(),
+                {keywords.Label: Label, keywords.updated: datetime.now(),
                  keywords.keyword: Keywords,
                  keywords.File_name: File_name,
                  keywords.updated_by: updated_by})
@@ -252,8 +257,8 @@ class system_high_ranking_positions(db.Model):
     position_title = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=True,default=datetime.utcnow)
-    created_by = db.Column(db.String(100), nullable=False)
-    updated_by = db.Column(db.String(100), nullable=True)
+    CREATED_BY = db.Column(db.String(100), nullable=False)
+    UPDATED_BY = db.Column(db.String(100), nullable=True)
 
     def __init__(self, position_title, created_by, updated_by):
         self.position_title = position_title

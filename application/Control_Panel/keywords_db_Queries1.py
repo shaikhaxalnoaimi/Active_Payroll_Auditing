@@ -17,13 +17,13 @@ This function to Fetch all keywords based on the selected label
 :return all keywords df
 """
 def Fetch_All_keywords(File_name, Label):
-    all_data = system_keywords.Fetch_All_keywords_by_File_Name_And_Labels_dataframe(File_name, Label)
+    all_data = keywords.Fetch_All_keywords_by_File_Name_And_Labels_dataframe(File_name, Label)
     return all_data
 
 
 
 def Fetch_File_Name(uid):
-    file_name = system_keywords.Fetch_File_Name_by_Id(uid)
+    file_name = keywords.Fetch_File_Name_by_Id(uid)
 
     return file_name
 
@@ -33,7 +33,7 @@ This function to Fetch label name to fill them in the dropdown list
 :return list of label names
 """
 def Fetch_Lable_keywords(file_name):
-    labels = system_keywords.Fetch_All_labels_by_File_Name_dataframe(file_name)
+    labels = keywords.Fetch_All_labels_by_File_Name_dataframe(file_name)
     return labels
 
 
@@ -45,7 +45,7 @@ def Fetch_Lable_keywords(file_name):
 # """
 def Fetch_Current_Values(uid):
     # Fetch Current Keyword
-    result = system_keywords.Fetch_all_label_by_kid_dataframe(uid)
+    result = keywords.Fetch_all_label_by_kid_dataframe(uid)
     rows = result.fetchall()
 
     current_label = rows[0][0]
@@ -57,12 +57,12 @@ def Fetch_Current_Values(uid):
 
 def Edit_keywords(select_label, kname,uid,file_name):
     updated_by = current_user.username
-    validate = system_keywords.Update_keyword_by_id(uid,kname, select_label, file_name,updated_by)
+    validate = keywords.Update_keyword_by_id(uid,kname, select_label, file_name,updated_by)
     return validate
 
 
 def Delete_keywords(uid):
-    delete_msg = system_keywords.Delete_Keyword_by_Id(uid)
+    delete_msg = keywords.Delete_Keyword_by_Id(uid)
 
 
 """
@@ -73,24 +73,24 @@ This function to add new keywords
 """
 def Insert_Data_keywords(select_label,kname,fname):
     created_by = current_user.username
-    #fetch data if it is already exist in KEWORDS table
-    check_msg = system_keywords.Add_Keyword_check_not_exist(kname, select_label, fname,created_by)
+    #fetch data if it is already exist in keywords table
+    check_msg = keywords.Add_Keyword_check_not_exist(kname, select_label, fname,created_by)
 
     return check_msg
 
 
 def Fetch_keywords_with_lable(column,filename):
-    keywords = system_keywords.Fetch_keyword_by_File_Name_and_Label_list(filename, column)
+    keywords = keywords.Fetch_keyword_by_File_Name_and_Label_list(filename, column)
     return keywords
 
 def Fetch_keywords_Without_Label(filename):
-    keywords = system_keywords.Fetch_keyword_by_File_Name_list(filename)
+    keywords = keywords.Fetch_keyword_by_File_Name_list(filename)
     return keywords
 
 # def Check_No_Duplicate_Keyword(label,mkeyword,file_name):
 #     # with sqlite3.connect(db_path) as cur:
 #     conn, cur = createConnection()
-#     data = cur.execute('''select KEYWORD,LABEL,FILE_NAME from KEWORDS WHERE KEYWORD=? AND FILE_NAME=?''',(mkeyword,file_name))
+#     data = cur.execute('''select KEYWORD,LABEL,FILE_NAME from keywords WHERE KEYWORD=? AND FILE_NAME=?''',(mkeyword,file_name))
 #     data = data.fetchall()
 #     duplicate_keyword = pd.DataFrame(data,columns=[ 'KEYWORD', 'LABEL','FILE_NAME'])
 #     # duplicate_keyword = data[(data['KEYWORD'] == mkeyword) & (data['LABEL'] == label)]
@@ -112,12 +112,12 @@ def Fetch_keywords_Without_Label(filename):
 #         #uid = 2
 #     conn, cur = createConnection()
 #     # Fetch Current Label
-#     current_label= cur.execute('''select LABEL from KEWORDS WHERE KID=?''',(uid,))
+#     current_label= cur.execute('''select LABEL from keywords WHERE KID=?''',(uid,))
 #     current_label = current_label.fetchall()
 #     current_label = pd.DataFrame(current_label, columns=['LABEL'])
 
 #     # Fetch Current Keyword
-#     result = cur.execute('''select LABEL, KEYWORD, FILE_NAME from KEWORDS WHERE KID=?''', (uid,))
+#     result = cur.execute('''select LABEL, KEYWORD, FILE_NAME from keywords WHERE KID=?''', (uid,))
 #     rows = result.fetchall()
 
 #     # current_label = rows[0][0]
@@ -139,13 +139,13 @@ def Fetch_keywords_Without_Label(filename):
 
 #     updated_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
 #     updated_by = current_user.username
-#     # fetch data if it is already exist in KEWORDS table
+#     # fetch data if it is already exist in keywords table
 #     duplicate_keyword = Check_No_Duplicate_Keyword(select_label, kname,file_name)
 
 #     # if not duplicate_keyword.empty:
 #     #     return duplicate_keyword
 #     # else:
-#     #     cur.execute("update KEWORDS set KEYWORD=?,LABEL=?, FILE_NAME=?, UPDATED_BY=?,UPDATED_DATE=? where KID=?", (kname, select_label, file_name, updated_by,updated_date,uid))
+#     #     cur.execute("update keywords set KEYWORD=?,LABEL=?, FILE_NAME=?, UPDATED_BY=?,UPDATED_DATE=? where KID=?", (kname, select_label, file_name, updated_by,updated_date,uid))
 #     #     cur.commit()
 #     #     return duplicate_keyword
 #     if not duplicate_keyword.empty:
@@ -157,7 +157,7 @@ def Fetch_keywords_Without_Label(filename):
 #         else:
 #             kname = sanitize_input(kname)
 #             conn, cur = createConnection()
-#             cur.execute("update KEWORDS set KEYWORD=?,LABEL=?, FILE_NAME=?, UPDATED_BY=?,UPDATED_DATE=? where KID=?", (kname, select_label, file_name, updated_by,updated_date,uid))
+#             cur.execute("update keywords set KEYWORD=?,LABEL=?, FILE_NAME=?, UPDATED_BY=?,UPDATED_DATE=? where KID=?", (kname, select_label, file_name, updated_by,updated_date,uid))
 #             conn.commit()
 #             conn.close()
 #             validate = 'True'
@@ -167,7 +167,7 @@ def Fetch_keywords_Without_Label(filename):
 # def Delete_keywords(uid):
 #     # with sqlite3.connect(db_path) as cur:
 #     conn, cur = createConnection()
-#     cur.execute("delete from KEWORDS where KID=?", (uid,))
+#     cur.execute("delete from keywords where KID=?", (uid,))
 #     conn.commit()
 #     conn.close()
 
@@ -177,7 +177,7 @@ def Fetch_keywords_Without_Label(filename):
 # #         #uid = 2
 # #     conn, cur = createConnection()
 # #     # Fetch Current Label
-# #     keywords = cur.execute('''select KEYWORD from KEWORDS WHERE LABEL=? AND FILE_NAME=?''',(column,filename))
+# #     keywords = cur.execute('''select KEYWORD from keywords WHERE LABEL=? AND FILE_NAME=?''',(column,filename))
 # #     keywords = keywords.fetchall()
 # #     keywords = pd.DataFrame(keywords, columns=['KEYWORD'])
 # #     keywords = keywords['KEYWORD'].values.tolist()
@@ -190,7 +190,7 @@ def Fetch_keywords_Without_Label(filename):
 # #         #uid = 2
 # #     conn, cur = createConnection()
 # #     # Fetch Current Label
-# #     keywords = cur.execute('''select KEYWORD from KEWORDS WHERE FILE_NAME=?''',(filename,))
+# #     keywords = cur.execute('''select KEYWORD from keywords WHERE FILE_NAME=?''',(filename,))
 # #     keywords = keywords.fetchall()
 # #     keywords = pd.DataFrame(keywords, columns=['KEYWORD'])
 # #     keywords = keywords['KEYWORD'].values.tolist()
@@ -201,10 +201,10 @@ def Fetch_keywords_Without_Label(filename):
 
 #     if column and filename:
 #         # Fetch keywords with given label and filename
-#         keywords = cur.execute('''SELECT KEYWORD FROM KEWORDS WHERE LABEL=? AND FILE_NAME=?''', (column, filename))
+#         keywords = cur.execute('''SELECT KEYWORD FROM keywords WHERE LABEL=? AND FILE_NAME=?''', (column, filename))
 #     elif filename:
 #         # Fetch all keywords for given filename
-#         keywords = cur.execute('''SELECT KEYWORD FROM KEWORDS WHERE FILE_NAME=?''', (filename,))
+#         keywords = cur.execute('''SELECT KEYWORD FROM keywords WHERE FILE_NAME=?''', (filename,))
 
 #     keywords = [row[0] for row in keywords.fetchall()]
 #     conn.close()
