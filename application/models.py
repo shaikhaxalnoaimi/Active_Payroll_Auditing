@@ -22,6 +22,7 @@ The system_high_ranking_positions class is defined with attributes such as pid, 
 The user_logs class is defined with attributes such as id, user_id, log_type, log_details, and created_at. It also has a method to add logs to the database.
 
 """
+from sqlalchemy.exc import IntegrityError
 
 #
 # class User(db.Model, UserMixin):
@@ -97,7 +98,7 @@ The user_logs class is defined with attributes such as id, user_id, log_type, lo
 #         self.password = generate_password_hash(password, method='s ha256')
 
 
-from application import db
+from application import db, create_app
 from datetime import datetime
 from application import db
 from flask_login import UserMixin
@@ -186,20 +187,41 @@ class keywords(db.Model):
         return results
 
     def Fetch_All_keywords_by_File_Name_And_Labels_dataframe(File_name, Label):
-        result = db.session.query(keywords).filter(keywords.FILE_NAME == File_name, keywords.LABEL == Label).all()
+        result = pd.DataFrame(db.session.query(
+            keywords.kid,
+            keywords.FILE_NAME,
+            keywords.LABEL,
+            keywords.KEYWORD,
+            keywords.CREATED_BY,
+            keywords.created_at,
+            keywords.UPDATED_BY,
+            keywords.updated_at).filter(keywords.FILE_NAME == File_name, keywords.LABEL == Label).all())
         return result
+
     def Fetch_All_labels_by_File_Name_And_Keyword_dataframe(File_name, keywords):
         return pd.DataFrame(db.session.query(keywords).filter_by(File_name=File_name, Keyword=keywords).all())
 
     def Check_Keyword_Exist(Keywords, File_name):
-        return db.session.query(keywords).filter_by(Keyword=Keywords, File_name=File_name).first()
+        return db.session.query(keywords.KEYWORD).filter_by(KEYWORD=Keywords, FILE_NAME=File_name).first()
 
-    def Add_Keyword_check_not_exist(Keyword, Label, File_name, created_by):
-        if keywords.Check_Keyword_Exist(Keyword, File_name) is None:
+    def Add_Keyword_check_not_exist(kword, Label, File_name, created_by):
+        if keywords.Check_Keyword_Exist(kword, File_name) is None:
+            kword = sanitize_input(kword) # function named 'sanitize_input' for sanitizing the input
 
-            new_keyword = keywords(sanitize_input(Keyword), Label, File_name, datetime.datetime.now(), None, created_by, None)
-            db.session.add(new_keyword)
-            db.session.commit()
+            app = create_app()
+            with app.app_context():
+                new_keyword = keywords(kword,Label, File_name,created_by, None)
+                print(new_keyword)
+                print(kword)
+                print(Label)
+                print(File_name)
+                # new_keyword = keywords('test', 'EMPLOYEE_NAME', 'MASTER','admin',None)
+                db.session.add(new_keyword)
+                db.session.commit()
+
+
+
+
             duplication = 'True'
         else:
             duplication = 'duplicate'

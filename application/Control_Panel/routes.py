@@ -55,7 +55,6 @@ def admin_panel():
         selected_fname = keywords_form.file_name.data
         selected_label = keywords_form.keyword_label.data
         all_data = Fetch_All_Keywords(selected_fname, selected_label)
-
         # selected keywords_label drop down list
         current_label = keywords_form.keyword_label.data
         keyword_labels = Fetch_Lable_Keywords(selected_fname)

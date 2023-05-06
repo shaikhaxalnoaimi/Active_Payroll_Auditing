@@ -48,8 +48,6 @@ def Fetch_Lable_Keywords(file_name):
 
 def Fetch_All_Keywords(File_name, Label):
     all_data = keywords.Fetch_All_keywords_by_File_Name_And_Labels_dataframe(File_name, Label)
-
-    print(all_data)
     return all_data
 
 
