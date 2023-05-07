@@ -81,9 +81,6 @@ from sqlalchemy.exc import IntegrityError
 #         self.role_id = role_id
 
 
-
-
-
 #
 # class User(db.Model, UserMixin):
 #     # attributes
@@ -107,12 +104,14 @@ import pandas as pd
 
 from application.Control_Panel.validation import sanitize_input
 
+
 class Role(db.Model):
     # attributes
     role_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     print(created_at)
+
     def __init__(self, name):
         self.name = name
 
@@ -133,9 +132,9 @@ class User(db.Model, UserMixin):
 
     def get_id(self):
         return self.user_id
+
     def UpdateLastLogin(self):
         self.last_login = datetime.utcnow()
-
 
 
 class UserRoles(db.Model):
@@ -153,8 +152,6 @@ class UserRoles(db.Model):
         self.role_id = role_id
 
 
-
-
 class keywords(db.Model):
     kid = db.Column(db.Integer, primary_key=True)
     KEYWORD = db.Column(db.String(100), nullable=False)
@@ -166,24 +163,23 @@ class keywords(db.Model):
     UPDATED_BY = db.Column(db.String(100), nullable=True)
 
     def __init__(self, Keyword, Label, File_name, created_by, updated_by):
-        self.Keyword = Keyword
-        self.Label = Label
-        self.File_name = File_name
+        self.KEYWORD = Keyword
+        self.LABEL = Label
+        self.FILE_NAME = File_name
         # self.created_at = created_at
         # self.updated_at = updated_at
-        self.created_by = created_by
-        self.updated_by = updated_by
+        self.CREATED_BY = created_by
+        self.UPDATED_BY = updated_by
 
     def Fetch_All_Keywords_dataframe(self):
         return pd.DataFrame(db.session.query(keywords).all())
-
-
 
     def Fetch_File_Name_by_Id(id):
         return db.session.query(keywords).filter_by(kid=id).first().File_name
 
     def Fetch_All_labels_by_File_Name_dataframe(File_name):
-        results = pd.DataFrame(db.session.query(keywords.LABEL).filter(keywords.FILE_NAME == File_name).distinct().all())
+        results = pd.DataFrame(
+            db.session.query(keywords.LABEL).filter(keywords.FILE_NAME == File_name).distinct().all())
         return results
 
     def Fetch_All_keywords_by_File_Name_And_Labels_dataframe(File_name, Label):
@@ -206,11 +202,11 @@ class keywords(db.Model):
 
     def Add_Keyword_check_not_exist(kword, Label, File_name, created_by):
         if keywords.Check_Keyword_Exist(kword, File_name) is None:
-            kword = sanitize_input(kword) # function named 'sanitize_input' for sanitizing the input
+            kword = sanitize_input(kword)  # function named 'sanitize_input' for sanitizing the input
 
             app = create_app()
             with app.app_context():
-                new_keyword = keywords(kword,Label, File_name,created_by, None)
+                new_keyword = keywords(kword.upper(), Label, File_name, created_by, None)
                 print(new_keyword)
                 print(kword)
                 print(Label)
@@ -219,15 +215,11 @@ class keywords(db.Model):
                 db.session.add(new_keyword)
                 db.session.commit()
 
-
-
-
             duplication = 'True'
         else:
             duplication = 'duplicate'
 
         return duplication
-
 
     def Update_Keyword_check_exist(Keywords, Label, File_name, updated_by):
         if keywords.Check_Keyword_Exist(Keywords, File_name) is not None:
@@ -244,21 +236,22 @@ class keywords(db.Model):
         return duplication
 
     def Update_keyword_by_id(id, Keywords, Label, File_name, updated_by):
-        duplication = keywords.Update_Keyword_check_exist(Keywords, Label, File_name,updated_by)
-        if duplication == 'no-duplicate':
+        # duplication = keywords.Update_Keyword_check_exist(Keywords, Label, File_name,updated_by)
+        if keywords.Check_Keyword_Exist(Keywords, File_name) is None:
             db.session.query(keywords).filter_by(kid=id).update(
-                {keywords.Label: Label.upper(),
+                {keywords.LABEL: Label.upper(),
                  keywords.updated_at: datetime.now(),
-                 keywords.File_name: File_name.upper(),
-                 keywords.keyword: Keywords.upper(),
-                 keywords.updated_by: updated_by})
+                 keywords.FILE_NAME: File_name.upper(),
+                 keywords.KEYWORD: sanitize_input(Keywords).upper(),
+                 keywords.UPDATED_BY: updated_by})
             db.session.commit()
+            duplication = 'no-duplicate'
+        else:
+            duplication = 'duplicate'
         return duplication
 
-
     def Fetch_all_label_by_kid_dataframe(kid):
-        return pd.DataFrame(db.session.query(keywords).filter_by(kid=kid).all())
-
+        return db.session.query(keywords).filter_by(kid=kid).first()
 
     def Delete_Keyword_by_Id(id):
         db.session.query(keywords).filter_by(kid=id).delete()
@@ -268,17 +261,15 @@ class keywords(db.Model):
     def Fetch_keyword_by_File_Name_list(File_names):
         return db.session.query(keywords).filter_by(File_name=File_names).all()
 
-
     def Fetch_keyword_by_File_Name_and_Label_list(File_names, Label):
         return db.session.query(keywords).filter_by(File_name=File_names, Label=Label).all()
-
 
 
 class system_high_ranking_positions(db.Model):
     pid = db.Column(db.Integer, primary_key=True)
     position_title = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, nullable=True,default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
     CREATED_BY = db.Column(db.String(100), nullable=False)
     UPDATED_BY = db.Column(db.String(100), nullable=True)
 
@@ -286,29 +277,39 @@ class system_high_ranking_positions(db.Model):
         self.position_title = position_title
         # self.created_at = created_at
         # self.updated_at = updated_at
-        self.created_by = created_by
-        self.updated_by = updated_by
+        self.CREATED_BY = created_by
+        self.UPDATED_BY = updated_by
 
     def Fetch_All_Positions_dataframe(self):
-        return pd.DataFrame(db.session.query(system_high_ranking_positions).all())
+        result = pd.DataFrame(db.session.query(
+            system_high_ranking_positions.pid,
+            system_high_ranking_positions.position_title,
+            system_high_ranking_positions.created_at,
+            system_high_ranking_positions.CREATED_BY,
+            system_high_ranking_positions.updated_at,
+            system_high_ranking_positions.UPDATED_BY).all())
+        return result
 
     def Fetch_All_positions_dataframe_by_position_title(position_title):
-        return pd.DataFrame(db.session.query(system_high_ranking_positions).filter_by(position_title=position_title).all())
+        return pd.DataFrame(
+            db.session.query(system_high_ranking_positions).filter_by(position_title=position_title).all())
 
     def Check_Position_Exist(position_title):
         return db.session.query(system_high_ranking_positions).filter_by(position_title=position_title).first()
 
     def Add_position_check_not_exist(position_title, created_by):
+        position_title = sanitize_input(position_title)
+        print(position_title)
         if system_high_ranking_positions.Check_Position_Exist(position_title) is None:
+            print("create")
             new_position = system_high_ranking_positions(position_title, datetime.now(), None, created_by, None)
-            db.session.add(sanitize_input(new_position))
+            db.session.add(new_position)
             db.session.commit()
             duplication = 'no-duplicate'
         else:
             duplication = 'duplicate'
 
         return duplication
-
 
     def Delete_position_check_exist(position_title):
         if system_high_ranking_positions.Check_Position_Exist(position_title) is not None:
@@ -349,12 +350,13 @@ class system_high_ranking_positions(db.Model):
         db.session.query(system_high_ranking_positions).filter_by(pid=pid).delete()
         db.session.commit()
 
+
 class user_logs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
     log_type = db.Column(db.String(500), nullable=False)
     log_details = db.Column(db.String(500), nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False,default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __init__(self, user_id, log_type, log_details):
         self.user_id = user_id
@@ -369,5 +371,3 @@ class user_logs(db.Model):
 
     def Fetch_All_Logs_dataframe(self):
         return pd.DataFrame(db.session.query(user_logs).all())
-
-

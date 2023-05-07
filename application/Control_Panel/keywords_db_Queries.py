@@ -25,16 +25,14 @@ Delete_Keywords(uid): function to delete a keyword from the KEWORDS table
 Fetch_Keywords(column=None, filename=None): function to fetch keywords from the KEWORDS table based on label and/or file name.
 """
 
-
 import sqlite3
 
 import pandas as pd
-from flask_login import  current_user
+from flask_login import current_user
 from datetime import datetime
 from application import db_path, db
-from application.Control_Panel.validation import is_valid_input,sanitize_input
+from application.Control_Panel.validation import is_valid_input, sanitize_input
 from application.models import keywords
-
 
 
 def Fetch_Lable_Keywords(file_name):
@@ -46,6 +44,7 @@ def Fetch_Lable_Keywords(file_name):
     results = keywords.Fetch_All_labels_by_File_Name_dataframe(file_name)
     return results
 
+
 def Fetch_All_Keywords(File_name, Label):
     all_data = keywords.Fetch_All_keywords_by_File_Name_And_Labels_dataframe(File_name, Label)
     return all_data
@@ -54,28 +53,32 @@ def Fetch_All_Keywords(File_name, Label):
 def Fetch_Current_Values(uid):
     # Fetch Current Keyword
     result = keywords.Fetch_all_label_by_kid_dataframe(uid)
-    rows = result.fetchall()
-
-    current_label = rows[0][0]
-    current_keyword = rows[0][1]
-    file_name = rows[0][2]
-    return file_name,current_label,current_keyword
+    current_label = result.LABEL
+    current_keyword = result.KEYWORD
+    file_name = result.FILE_NAME
+    return file_name, current_label, current_keyword
 
 
-def Edit_Keywords(select_label, kname,uid,file_name):
+def Edit_Keywords(select_label, kname, uid, file_name):
     updated_by = current_user.username
-    validate = keywords.Update_keyword_by_id(uid,kname, select_label, file_name,updated_by)
+    validate = keywords.Update_keyword_by_id(uid, kname, select_label, file_name, updated_by)
     return validate
 
 
 def Delete_Keywords(uid):
     delete_msg = keywords.Delete_Keyword_by_Id(uid)
 
+
 def Insert_Data_Keywords(select_label, kname, fname):
     created_by = current_user.username
     # fetch data if it is already exist in keywords table
-    check_msg = keywords.Add_Keyword_check_not_exist(kname, select_label, fname, created_by)
 
+    # new = keywords("keywork", select_label, fname, created_by, "test")
+    # db.session.add(new)
+    # db.session.commit()
+
+    check_msg = keywords.Add_Keyword_check_not_exist(kname, select_label, fname, created_by)
+    # check_msg = ""
     return check_msg
 
 #

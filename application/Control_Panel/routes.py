@@ -21,9 +21,8 @@ Define routes and functions for editing data in the database
 Define routes and functions for deleting data from the database
 """
 
-
 import pandas as pd
-from flask import render_template, request, redirect, url_for,jsonify
+from flask import render_template, request, redirect, url_for, jsonify
 from application.Control_Panel.forms import KeywrodsForm
 from application.Control_Panel.keywords_db_Queries import Fetch_All_Keywords, Fetch_Lable_Keywords, \
     Fetch_Current_Values, Edit_Keywords, Delete_Keywords, Insert_Data_Keywords
@@ -43,11 +42,12 @@ def admin_panel():
     # initialize keywords_label drop down list
     keyword_labels = Fetch_Lable_Keywords("MASTER")
 
-    keywords_form.keyword_label.choices = [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind] ) for ind in keyword_labels.index]
-    #initialize Keywords Table
+    keywords_form.keyword_label.choices = [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in
+                                           keyword_labels.index]
+    # initialize Keywords Table
     all_data = Fetch_All_Keywords("MASTER", "EMPLOYEE_NAME")  # based on selected label
 
-    #initialize positions Table
+    # initialize positions Table
     all_data_positions = Fetch_All_Positions()  # based on selected label
 
     if request.method == 'POST':
@@ -59,28 +59,28 @@ def admin_panel():
         current_label = keywords_form.keyword_label.data
         keyword_labels = Fetch_Lable_Keywords(selected_fname)
         # print(selected_fname)
-        #keywords_form.keyword_label.choices = [current_label] + [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in keyword_labels.index]
-        keywords_form.keyword_label.choices  = [(current_label, current_label)] + [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in keyword_labels.index if keyword_labels['LABEL'][ind] != current_label]
-
+        # keywords_form.keyword_label.choices = [current_label] + [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in keyword_labels.index]
+        keywords_form.keyword_label.choices = [(current_label, current_label)] + [
+            (keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in keyword_labels.index if
+            keyword_labels['LABEL'][ind] != current_label]
 
     return render_template('control_panel/index.html',
                            segment="Control_Panel",
-                           keywords_form = keywords_form,
+                           keywords_form=keywords_form,
                            # return master keyword table filtered by label name (default selected_value)
                            all_data_mk_columns=all_data.columns.values,
                            all_data_mk_rows=list(all_data.values.tolist()),
                            # return all high ranking positions data
-                           all_data_positions_columns= all_data_positions.columns.values,
-                           all_data_positions_rows =list(all_data_positions.values.tolist()),
+                           all_data_positions_columns=all_data_positions.columns.values,
+                           all_data_positions_rows=list(all_data_positions.values.tolist()),
                            zip=zip
                            )
-
 
 
 @blueprint.route('/label/<file_name>', methods=["POST", "GET"])
 @login_required
 def label(file_name):
-    labels =  Fetch_Lable_Keywords(file_name)
+    labels = Fetch_Lable_Keywords(file_name)
     labels_array = []
 
     for ind in labels.index:
@@ -90,8 +90,6 @@ def label(file_name):
         labels_array.append(label_obj)
 
     return jsonify({'labels': labels_array})
-
-
 
 
 ######################################################
@@ -104,23 +102,23 @@ def add_keywords():
     exits = ''
     keywords_form = KeywrodsForm()
     # initialize keywords_label drop down list
-    #keyword_labels = Fetch_Lable_Keywords("MASTER")
-    keywords_form.file_name.choices = [("", "  --- Select File Name---")] + [('MASTER',"Employee Master"), ('PAYROLL','Employee Payroll')]
+    # keyword_labels = Fetch_Lable_Keywords("MASTER")
+    keywords_form.file_name.choices = [("", "  --- Select File Name---")] + [('MASTER', "Employee Master"),
+                                                                             ('PAYROLL', 'Employee Payroll')]
     keywords_form.keyword_label.choices = [("", "  --- Select Label of Keyword ---")]
-                                          #+ [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind] ) for ind in keyword_labels.index]
-
+    # + [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind] ) for ind in keyword_labels.index]
 
     if request.method == 'POST':
         selected_fname = keywords_form.file_name.data
         selected_label = keywords_form.keyword_label.data
-        kname=request.form['keyword']
-
+        kname = request.form['keyword']
 
         # update selected keywords_label drop down list
         keyword_labels = Fetch_Lable_Keywords(selected_fname)
-        keywords_form.keyword_label.choices = [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in keyword_labels.index]
+        keywords_form.keyword_label.choices = [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in
+                                               keyword_labels.index]
 
-        check_message = Insert_Data_Keywords(selected_label,kname,selected_fname)
+        check_message = Insert_Data_Keywords(selected_label, kname, selected_fname)
         if check_message == 'duplicate':
             exits = True
         elif check_message == 'invalid':
@@ -128,13 +126,13 @@ def add_keywords():
         else:
             exits = False
 
-
     return render_template("control_panel/add_keyword.html",
                            exits=exits,
                            keywords_form=keywords_form)
 
+
 # Position
-@blueprint.route('/add_positions', methods=["POST", "GET"])
+@blueprint.route('/add_position', methods=["POST", "GET"])
 @login_required
 def add_position():
     exits = ''
@@ -149,7 +147,6 @@ def add_position():
             exits = 'Invalid'
         else:
             exits = False
-
 
     return render_template("control_panel/add_position.html",
                            exits=exits)
@@ -166,37 +163,40 @@ def edit_keyword(uid):
     # file_name = 'MASTER'
     # master_label1 = Fetch_Lable_Keywords(file_name)
 
-
     file_name, current_label, current_keyword = Fetch_Current_Values(uid)
-    #file_name = Fetch_File_Name(uid)
+    # file_name = Fetch_File_Name(uid)
 
     keywords_form = KeywrodsForm()
     keyword_labels = Fetch_Lable_Keywords(file_name)
-    keywords_form.keyword_label.choices =  [(current_label['LABEL'][ind], current_label['LABEL'][ind]) for ind in current_label.index] +  [(keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in keyword_labels.index if keyword_labels['LABEL'][ind] !=  current_label['LABEL'][0]]
+    # keywords_form.keyword_label.choices = [(current_label['LABEL'][ind], current_label['LABEL'][ind]) for ind in
+    #                                        current_label.index] + [
+    #                                           (keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in
+    #                                           keyword_labels.index if
+    #                                           keyword_labels['LABEL'][ind] != current_label['LABEL'][0]]
+    keywords_form.keyword_label.choices = [(current_label, current_label)] + [
+                                              (keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in
+                                              keyword_labels.index if
+                                              keyword_labels['LABEL'][ind] != current_label]
 
     if request.method == 'POST':
         select_label = keywords_form.keyword_label.data
         kname = request.form['keyword1']
-        check_message = Edit_Keywords(select_label, kname,uid,  file_name)
-
+        check_message = Edit_Keywords(select_label, kname, uid, file_name)
 
         if check_message == 'duplicate':
             updated = True
             # return updated current values
-            file_name, current_label, current_keyword= Fetch_Current_Values(uid)
+            file_name, current_label, current_keyword = Fetch_Current_Values(uid)
         elif check_message == 'invalid':
             updated = 'Invalid'
         else:
             updated = False
 
-
-
-
     return render_template("control_panel/edit_keyword.html",
                            uid=uid,
-                           updated = updated,
-                           current_label = current_label,
-                           current_keyword = current_keyword,
+                           updated=updated,
+                           current_label=current_label,
+                           current_keyword=current_keyword,
                            keywords_form=keywords_form,
                            )
 
@@ -209,7 +209,7 @@ def edit_position(uid):
     current_position = Fetch_Current_Position_Values(uid)
     if request.method == 'POST':
         pname = request.form['position1']
-        check_message = Edit_Positions(pname,uid)
+        check_message = Edit_Positions(pname, uid)
 
         if check_message == 'duplicate':
             updated = True
@@ -229,15 +229,15 @@ def edit_position(uid):
 ######################################################
 ############# Deleting form sqlit Section ################
 ######################################################
-#deleting keyword
+# deleting keyword
 @blueprint.route('/delete_keyword/<string:uid>/<string:selected_value>/<string:fname>', methods=['GET'])
 @login_required
-def delete_keyword(uid,selected_value,fname):
+def delete_keyword(uid, selected_value, fname):
     all_data = pd.DataFrame()
     deleted = False
     keywords_form = KeywrodsForm()
     # selected keywords_label drop down list
-    #current_label = keywords_form.keyword_label.data
+    # current_label = keywords_form.keyword_label.data
     keyword_labels = Fetch_Lable_Keywords(fname)
 
     keywords_form.keyword_label.choices = [(selected_value, selected_value)] + [
@@ -272,16 +272,12 @@ def delete_keyword(uid,selected_value,fname):
     #                        zip=zip
     #                        )
 
-    #return redirect(url_for("control_panel.index"))
+    # return redirect(url_for("control_panel.index"))
 
-#deleting position
+
+# deleting position
 @blueprint.route('/delete_position/<string:uid>', methods=['GET'])
 @login_required
 def delete_position(uid):
     Delete_Positions(uid)
     return redirect(url_for('control_panel.admin_panel'))
-
-
-
-
-

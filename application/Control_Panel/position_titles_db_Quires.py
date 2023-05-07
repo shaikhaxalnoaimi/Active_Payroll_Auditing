@@ -13,7 +13,8 @@ def Fetch_All_Positions():
     This function to Fetch all high ranking positions title
     :return all keywords df
     """
-    all_data = pd.DataFrame(db.session.query(system_high_ranking_positions).all())
+
+    all_data = system_high_ranking_positions.Fetch_All_Positions_dataframe(system_high_ranking_positions)
     print(all_data)
     return all_data
 

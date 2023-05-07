@@ -9,7 +9,7 @@
 {% block content %}
 
 <!-- Modal -->
-<div class="modal fade" id="ModalCenter1" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+<div class="modal fade" id="ModalCenter2" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
   <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form method='post' action='{{url_for("control_panel.add_position")}}'>
@@ -52,7 +52,7 @@
  <!-- Optional JavaScript -->
 
 <script>
-  let modal = new bootstrap.Modal( document.querySelector('#ModalCenter1'), { backdrop: 'static', position: false } );
+  let modal = new bootstrap.Modal( document.querySelector('#ModalCenter2'), { backdrop: 'static', position: false } );
   modal.toggle();
 </script>
 
