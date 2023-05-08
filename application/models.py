@@ -302,7 +302,7 @@ class system_high_ranking_positions(db.Model):
         print(position_title)
         if system_high_ranking_positions.Check_Position_Exist(position_title) is None:
             print("create")
-            new_position = system_high_ranking_positions(position_title, datetime.now(), None, created_by, None)
+            new_position = system_high_ranking_positions(position_title, created_by, None)
             db.session.add(new_position)
             db.session.commit()
             duplication = 'no-duplicate'
