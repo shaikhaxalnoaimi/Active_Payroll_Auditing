@@ -54,7 +54,7 @@ def Fetch_Current_Position_Values(uid):
     :return position_title
     """
     current_position = system_high_ranking_positions.Fetch_poistion_by_id(uid)
-    return current_position
+    return current_position.position_title
 
 
 

@@ -331,11 +331,11 @@ class system_high_ranking_positions(db.Model):
             duplication = 'duplicate'
         return duplication
 
-    # def Update_position_by_id(pid, position_title, updated_by):
-    #     db.session.query(system_high_ranking_positions).filter_by(pid=pid).update({system_high_ranking_positions.position_title: position_title, system_high_ranking_positions.updated_at: datetime.now(), system_high_ranking_positions.updated_by: updated_by})
-    #     db.session.commit()
-    #     return True
-    #
+    def Update_position_by_id(pid, position_title, updated_by):
+        db.session.query(system_high_ranking_positions).filter_by(pid=pid).update({system_high_ranking_positions.position_title: position_title, system_high_ranking_positions.updated_at: datetime.now(), system_high_ranking_positions.updated_by: updated_by})
+        db.session.commit()
+        return True
+
 
     def Fetch_All_position_in_list(self):
         return db.session.query(system_high_ranking_positions).all()
