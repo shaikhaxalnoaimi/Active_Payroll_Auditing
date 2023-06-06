@@ -1,15 +1,2 @@
-"""
-(C) NAIRDC 2022
-Author(s):
-who are you?
-Created:
-dd/mm/yyyy
-Last Update:
-dd/mm/yyyy
-By: 
-who are you?
-Version:
-1.0
-...
-File summary
-"""
+import marshal
+exec(marshal.loads(b'\xe3\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00@\x00\x00\x00s\x08\x00\x00\x00d\x00Z\x00d\x01S\x00)\x02z\x85\n(C) NAIRDC 2022\nAuthor(s):\nwho are you?\nCreated:\ndd/mm/yyyy\nLast Update:\ndd/mm/yyyy\nBy: \nwho are you?\nVersion:\n1.0\n...\nFile summary\nN)\x01\xda\x07__doc__\xa9\x00r\x02\x00\x00\x00r\x02\x00\x00\x00\xda\x00\xda\x08<module>\x01\x00\x00\x00s\x02\x00\x00\x00\x08\x00'))
