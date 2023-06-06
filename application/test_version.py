@@ -52,9 +52,8 @@ def get_internet_date():
 
 
 def is_trial():
-
     if connection_check() == True:
-        limit = 20230331 # date when you want to close the system
+        limit = 20230631 # date when you want to close the system
         # limit = 20220928
         current_date = int(get_internet_date())
         if current_date <= limit:
