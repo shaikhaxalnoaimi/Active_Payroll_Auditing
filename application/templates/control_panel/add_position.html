@@ -1,63 +1,69 @@
 {% extends "/control_panel/index.html" %}
 {% block title %} Admin Panel {% endblock %}
 
-{%block model%}
+{% block model %}
 
-{% endblock%}
+{% endblock %}
 
 
 {% block content %}
 
-<!-- Modal -->
-<div class="modal fade" id="ModalCenter2" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+    <!-- Modal -->
+    <div class="modal fade" id="ModalCenter2" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form method='post' action='{{url_for("control_panel.add_position")}}'>
-                  <div class="modal-header">
-                      <div class='container2'>
-                    <div class='wood-text'> Add New Position</div>
-                  </div>
-                    <a href="{{url_for('control_panel.admin_panel')}}">
-                      <span aria-hidden="true" style="font-size:30px;">&times;</span>
-                    </a>
-                  </div>
+                <form method='post' action='{{ url_for("control_panel.add_position") }}'>
+                    <div class="modal-header">
+                        <div class='container2'>
+                            <div class='wood-text'> Add New Position</div>
+                        </div>
+                        <a href="{{ url_for('control_panel.admin_panel') }}">
+                            <span aria-hidden="true" style="font-size:30px;">&times;</span>
+                        </a>
+                    </div>
 
 
-                  <div class="modal-body">
+                    <div class="modal-body">
 
-                      {% include '/includes/notificationsMessage.html' %}
+                        {% include '/includes/notificationsMessage.html' %}
 
                         <!-- the form content -->
+                        <div class='form-group'>
+                            {{ position_form.csrf_token }}
+                            {{ position_form.position_name(class='form-control') }}
+{#                            <input type='text' name='position' class='form-control'#}
+{#                                   placeholder="&nbsp; &nbsp; &nbsp; Enter position name" required>#}
+{#                       #}
+
+                        </div>
 
 
-                          <div class='form-group'>
-                            <input type='text' name='position'  class='form-control' placeholder="&nbsp; &nbsp; &nbsp; Enter position name" required>
-                          </div>
+                    </div>
 
-
-                  </div>
-
-                  <div class="modal-footer">
-                    <input type='submit' value='Submit' style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;" class='btn btn-primary'>
-                    <a href="{{url_for('control_panel.admin_panel')}}" class="btn btn-secondary" style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;" >Close</a>
-                  </div>
+                    <div class="modal-footer">
+                        <input type='submit' value='Submit'
+                               style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
+                               class='btn btn-primary'>
+                        <a href="{{ url_for('control_panel.admin_panel') }}" class="btn btn-secondary"
+                           style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;">Close</a>
+                    </div>
                 </form>
             </div>
 
-  </div>
-</div>
+        </div>
+    </div>
 {% endblock %}
 
-{%block js%}
- <!-- Optional JavaScript -->
+{% block js %}
+    <!-- Optional JavaScript -->
 
-<script>
-  let modal = new bootstrap.Modal( document.querySelector('#ModalCenter2'), { backdrop: 'static', position: false } );
-  modal.toggle();
-</script>
+    <script>
+        let modal = new bootstrap.Modal(document.querySelector('#ModalCenter2'), {backdrop: 'static', position: false});
+        modal.toggle();
+    </script>
 
 
-{%endblock js%}
+{% endblock js %}
 
 
 

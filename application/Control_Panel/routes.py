@@ -23,7 +23,7 @@ Define routes and functions for deleting data from the database
 
 import pandas as pd
 from flask import render_template, request, redirect, url_for, jsonify
-from application.Control_Panel.forms import KeywrodsForm
+from application.Control_Panel.forms import KeywrodsForm, PositionsForm
 from application.Control_Panel.keywords_db_Queries import Fetch_All_Keywords, Fetch_Lable_Keywords, \
     Fetch_Current_Values, Edit_Keywords, Delete_Keywords, Insert_Data_Keywords
 from application.Control_Panel.position_titles_db_Quires import Fetch_All_Positions, Insert_Data_Positions, \
@@ -141,11 +141,11 @@ def add_position():
     not process the request due to something that is perceived to be a client error (for example, malformed request
     syntax, invalid request message framing, or deceptive request routing).
     """
-    print(request.method, "=" * 20)
+    position_form = PositionsForm()
     exits = ''
     if request.method == 'POST':
-        pname = request.form['position']
-        print('the position name:' + pname)
+        # pname = request.form['position']
+        pname = position_form.position_name.data
         check_message = Insert_Data_Positions(pname)
         # print('recived mesage:' + check_message)
         if check_message == 'duplicate':
@@ -156,7 +156,8 @@ def add_position():
             exits = False
 
     return render_template("control_panel/add_position.html",
-                           exits=exits)
+                           exits=exits,
+                           position_form= position_form)
 
 
 ######################################################
@@ -167,19 +168,11 @@ def add_position():
 @login_required
 def edit_keyword(uid):
     updated = ''
-    # file_name = 'MASTER'
-    # master_label1 = Fetch_Lable_Keywords(file_name)
-
     file_name, current_label, current_keyword = Fetch_Current_Values(uid)
     # file_name = Fetch_File_Name(uid)
 
     keywords_form = KeywrodsForm()
     keyword_labels = Fetch_Lable_Keywords(file_name)
-    # keywords_form.keyword_label.choices = [(current_label['LABEL'][ind], current_label['LABEL'][ind]) for ind in
-    #                                        current_label.index] + [
-    #                                           (keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in
-    #                                           keyword_labels.index if
-    #                                           keyword_labels['LABEL'][ind] != current_label['LABEL'][0]]
     keywords_form.keyword_label.choices = [(current_label, current_label)] + [
         (keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in
         keyword_labels.index if
@@ -214,8 +207,9 @@ def edit_keyword(uid):
 def edit_position(uid):
     updated = ''
     current_position = Fetch_Current_Position_Values(uid)
+    position_form = PositionsForm()
     if request.method == 'POST':
-        pname = request.form['position1']
+        pname = position_form.position_name.data
         check_message = Edit_Positions(pname, uid)
 
         if check_message == 'duplicate':
@@ -230,7 +224,8 @@ def edit_position(uid):
     return render_template("control_panel/edit_position.html",
                            uid=uid,
                            updated=updated,
-                           current_position=current_position)
+                           current_position=current_position,
+                           position_form=position_form)
 
 
 ######################################################
@@ -240,46 +235,15 @@ def edit_position(uid):
 @blueprint.route('/delete_keyword/<string:uid>/<string:selected_value>/<string:fname>', methods=['GET'])
 @login_required
 def delete_keyword(uid, selected_value, fname):
-    all_data = pd.DataFrame()
-    deleted = False
     keywords_form = KeywrodsForm()
-    # selected keywords_label drop down list
-    # current_label = keywords_form.keyword_label.data
     keyword_labels = Fetch_Lable_Keywords(fname)
-
     keywords_form.keyword_label.choices = [(selected_value, selected_value)] + [
         (keyword_labels['LABEL'][ind], keyword_labels['LABEL'][ind]) for ind in keyword_labels.index if
         keyword_labels['LABEL'][ind] != selected_value]
 
     Delete_Keywords(uid)
-    deleted = True
-    # updated list after deleting
-    all_data = Fetch_All_Keywords(fname, selected_value)
-
-    print(selected_value)
-    print(fname)
-
     return redirect(url_for('control_panel.admin_panel'))
 
-    # deleted = True
-    # #updated list after deleting
-    #
-    # all_data = Fetch_All_Keywords(current_label,fname)
-
-    # return render_template('control_panel/index.html',
-    #                        segment="Control_Panel",
-    #                        # return true to show message that the rwo deleted successfully
-    #                        deleted = deleted,
-    #                        # return the same label that the keyword you try to delete is belong to it to reflect the change after deleting on table with sam label
-    #                        # selected_value = selected_value,
-    #
-    #                        keywords_form=keywords_form,
-    #                        all_data_mk_columns=all_data.columns.values,
-    #                        all_data_mk_rows=list(all_data.values.tolist()),
-    #                        zip=zip
-    #                        )
-
-    # return redirect(url_for("control_panel.index"))
 
 
 # deleting position

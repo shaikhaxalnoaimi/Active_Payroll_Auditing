@@ -13,9 +13,7 @@ def Fetch_All_Positions():
     This function to Fetch all high ranking positions title
     :return all keywords df
     """
-
     all_data = system_high_ranking_positions.Fetch_All_Positions_dataframe(system_high_ranking_positions)
-    print(all_data)
     return all_data
 
 
@@ -25,12 +23,8 @@ def Insert_Data_Positions(position_title):
     :param: receive the selected label and entered keyword from forms
     :return a df this dataframe will have data if the added keyword already exists and empty if added keyword is successful and no duplicate
     """
-    # print('the position title entered:' + position_title)
     created_by = current_user.username
-    # print('The one who add' + created_by)
-    #fetch data if it is already exist in position table
     validate = system_high_ranking_positions.Add_position_check_not_exist(position_title,created_by)
-
     return validate
 
 
@@ -42,7 +36,7 @@ def Edit_Positions(position_title,uid):
     """
     position_title = position_title.upper()
     updated_by = current_user.username
-    validate = system_high_ranking_positions.Update_position_by_id(uid, position_title, updated_by)
+    validate = system_high_ranking_positions.Update_position_check_exist(uid, position_title, updated_by)
     return validate
 
 

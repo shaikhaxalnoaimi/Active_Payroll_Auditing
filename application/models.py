@@ -201,16 +201,12 @@ class keywords(db.Model):
         return db.session.query(keywords.KEYWORD).filter_by(KEYWORD=Keywords, FILE_NAME=File_name).first()
 
     def Add_Keyword_check_not_exist(kword, Label, File_name, created_by):
+        kword = sanitize_input(kword)  # function named 'sanitize_input' for sanitizing the input
+        kword = kword.upper()
         if keywords.Check_Keyword_Exist(kword, File_name) is None:
-            kword = sanitize_input(kword)  # function named 'sanitize_input' for sanitizing the input
-
             app = create_app()
             with app.app_context():
-                new_keyword = keywords(kword.upper(), Label, File_name, created_by, None)
-                print(new_keyword)
-                print(kword)
-                print(Label)
-                print(File_name)
+                new_keyword = keywords(kword, Label, File_name, created_by, None)
                 # new_keyword = keywords('test', 'EMPLOYEE_NAME', 'MASTER','admin',None)
                 db.session.add(new_keyword)
                 db.session.commit()
@@ -271,14 +267,14 @@ class system_high_ranking_positions(db.Model):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
     CREATED_BY = db.Column(db.String(100), nullable=False)
-    UPDATED_BY = db.Column(db.String(100), nullable=True)
+    updated_by = db.Column(db.String(100), nullable=True)
 
     def __init__(self, position_title, created_by, updated_by):
         self.position_title = position_title
         # self.created_at = created_at
         # self.updated_at = updated_at
         self.CREATED_BY = created_by
-        self.UPDATED_BY = updated_by
+        self.updated_by = updated_by
 
     def Fetch_All_Positions_dataframe(self):
         result = pd.DataFrame(db.session.query(
@@ -287,7 +283,7 @@ class system_high_ranking_positions(db.Model):
             system_high_ranking_positions.created_at,
             system_high_ranking_positions.CREATED_BY,
             system_high_ranking_positions.updated_at,
-            system_high_ranking_positions.UPDATED_BY).all())
+            system_high_ranking_positions.updated_by).all())
         return result
 
     def Fetch_All_positions_dataframe_by_position_title(position_title):
@@ -295,13 +291,12 @@ class system_high_ranking_positions(db.Model):
             db.session.query(system_high_ranking_positions).filter_by(position_title=position_title).all())
 
     def Check_Position_Exist(position_title):
-        return db.session.query(system_high_ranking_positions).filter_by(position_title=position_title).first()
+        value = db.session.query(system_high_ranking_positions).filter_by(position_title=position_title).first()
+        return value
 
     def Add_position_check_not_exist(position_title, created_by):
         position_title = sanitize_input(position_title)
-        print(position_title)
         if system_high_ranking_positions.Check_Position_Exist(position_title) is None:
-            print("create")
             new_position = system_high_ranking_positions(position_title, created_by, None)
             db.session.add(new_position)
             db.session.commit()
@@ -320,9 +315,10 @@ class system_high_ranking_positions(db.Model):
             return False
 
     def Update_position_check_exist(pid, position_title, updated_by):
+        position_title = sanitize_input(position_title)
         if system_high_ranking_positions.Check_Position_Exist(position_title) is None:
             db.session.query(system_high_ranking_positions).filter_by(pid=pid).update(
-                {system_high_ranking_positions.position_title: sanitize_input(position_title),
+                {system_high_ranking_positions.position_title: position_title,
                  system_high_ranking_positions.updated_at: datetime.now(),
                  system_high_ranking_positions.updated_by: updated_by})
             db.session.commit()
@@ -330,12 +326,6 @@ class system_high_ranking_positions(db.Model):
         else:
             duplication = 'duplicate'
         return duplication
-
-    def Update_position_by_id(pid, position_title, updated_by):
-        db.session.query(system_high_ranking_positions).filter_by(pid=pid).update({system_high_ranking_positions.position_title: position_title, system_high_ranking_positions.updated_at: datetime.now(), system_high_ranking_positions.updated_by: updated_by})
-        db.session.commit()
-        return True
-
 
     def Fetch_All_position_in_list(self):
         return db.session.query(system_high_ranking_positions).all()

@@ -71,12 +71,6 @@ def Delete_Keywords(uid):
 
 def Insert_Data_Keywords(select_label, kname, fname):
     created_by = current_user.username
-    # fetch data if it is already exist in keywords table
-
-    # new = keywords("keywork", select_label, fname, created_by, "test")
-    # db.session.add(new)
-    # db.session.commit()
-
     check_msg = keywords.Add_Keyword_check_not_exist(kname, select_label, fname, created_by)
     # check_msg = ""
     return check_msg

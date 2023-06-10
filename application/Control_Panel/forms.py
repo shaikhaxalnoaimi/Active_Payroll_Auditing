@@ -17,11 +17,10 @@ The form is then ready to be used in a Flask view function.
 """
 
 from flask_wtf import FlaskForm
-from wtforms import SelectField, SubmitField
+from wtforms import SelectField, SubmitField, StringField
 
 # this form has two select filed one will fill by file names and other will fill by label
-from wtforms.validators import InputRequired
-
+from wtforms.validators import InputRequired, DataRequired, Length
 
 
 class KeywrodsForm(FlaskForm):
@@ -31,3 +30,7 @@ class KeywrodsForm(FlaskForm):
                                 validators=[InputRequired(message="Please select label of keyword name!")])
 
     submit1 = SubmitField('KeywrodsForm')
+
+class PositionsForm(FlaskForm):
+    position_name = StringField('Position_Name', validators=[DataRequired()],render_kw={"placeholder": "  Position Name"} )
+    submit2 = SubmitField('PositionsForm')
