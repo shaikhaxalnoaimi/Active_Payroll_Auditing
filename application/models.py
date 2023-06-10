@@ -203,6 +203,7 @@ class keywords(db.Model):
     def Add_Keyword_check_not_exist(kword, Label, File_name, created_by):
         kword = sanitize_input(kword)  # function named 'sanitize_input' for sanitizing the input
         kword = kword.upper()
+        print(kword)
         if keywords.Check_Keyword_Exist(kword, File_name) is None:
             app = create_app()
             with app.app_context():
