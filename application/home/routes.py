@@ -101,10 +101,6 @@ def selectFormInitilization():
 
 
     dic_list2.update({k: "MonthlyPayroll_data" for k in files_payroll})
-
-
-    print(dic_list2)
-
     return selectform_master, selectform_payroll, full_paths_payroll, files_payroll
 
 
@@ -657,14 +653,14 @@ def auditingProcess():
                 value = 'invalid_sick_leave process has issue in ' + str(ex) + ' .Please inform technical team'
                 error1 = True
 
-            try:
-                # Fetch if there is two same high ranking position ate the same organization
-                duplicate_high_rank_posisiton = Check_High_Rank_Posisiton(master_df)
-                no_duplicate_high_rank_posisiton = Check_Auditing_Validation(duplicate_high_rank_posisiton)
-            except Exception as ex:
-                value = 'duplicate_high_rank_posisiton process has issue in ' + str(
-                    ex) + ' .Please inform technical team'
-                error1 = True
+            # try:
+            # Fetch if there is two same high ranking position ate the same organization
+            duplicate_high_rank_posisiton = Check_High_Rank_Posisiton(master_df)
+            no_duplicate_high_rank_posisiton = Check_Auditing_Validation(duplicate_high_rank_posisiton)
+            # except Exception as ex:
+            #     value = 'duplicate_high_rank_posisiton process has issue in ' + str(
+            #         ex) + ' .Please inform technical team'
+            #     error1 = True
 
             try:
                 # Fetch if employee has missing_grade

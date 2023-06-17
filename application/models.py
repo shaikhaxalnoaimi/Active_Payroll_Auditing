@@ -22,9 +22,6 @@ The system_high_ranking_positions class is defined with attributes such as pid, 
 The user_logs class is defined with attributes such as id, user_id, log_type, log_details, and created_at. It also has a method to add logs to the database.
 
 """
-from sqlalchemy.exc import IntegrityError
-
-#
 # class User(db.Model, UserMixin):
 #     # attributes
 #     id = db.Column(db.Integer, primary_key=True)
@@ -97,7 +94,6 @@ from sqlalchemy.exc import IntegrityError
 
 from application import db, create_app
 from datetime import datetime
-from application import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
 import pandas as pd
@@ -110,7 +106,6 @@ class Role(db.Model):
     role_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    print(created_at)
 
     def __init__(self, name):
         self.name = name
@@ -203,7 +198,6 @@ class keywords(db.Model):
     def Add_Keyword_check_not_exist(kword, Label, File_name, created_by):
         kword = sanitize_input(kword)  # function named 'sanitize_input' for sanitizing the input
         kword = kword.upper()
-        print(kword)
         if keywords.Check_Keyword_Exist(kword, File_name) is None:
             app = create_app()
             with app.app_context():
@@ -272,8 +266,6 @@ class system_high_ranking_positions(db.Model):
 
     def __init__(self, position_title, created_by, updated_by):
         self.position_title = position_title
-        # self.created_at = created_at
-        # self.updated_at = updated_at
         self.CREATED_BY = created_by
         self.updated_by = updated_by
 
@@ -297,6 +289,7 @@ class system_high_ranking_positions(db.Model):
 
     def Add_position_check_not_exist(position_title, created_by):
         position_title = sanitize_input(position_title)
+        position_title = position_title.upper()
         if system_high_ranking_positions.Check_Position_Exist(position_title) is None:
             new_position = system_high_ranking_positions(position_title, created_by, None)
             db.session.add(new_position)
@@ -329,7 +322,9 @@ class system_high_ranking_positions(db.Model):
         return duplication
 
     def Fetch_All_position_in_list(self):
-        return db.session.query(system_high_ranking_positions).all()
+        all_data = db.session.query(system_high_ranking_positions.position_title).all()
+        all_data = [row.position_title for row in all_data]
+        return all_data
 
     def Fetch_poistion_by_id(pid):
         return db.session.query(system_high_ranking_positions).filter_by(pid=pid).first()

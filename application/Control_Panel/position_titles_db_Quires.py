@@ -70,7 +70,8 @@ def fetchAllPositionTitle():
     all_data: list
         a list of all high ranking positions title
     """
-    all_data = system_high_ranking_positions.Fetch_All_position_in_list()
+    obj = system_high_ranking_positions('','','')
+    all_data = obj.Fetch_All_position_in_list()
 
     return all_data
 
