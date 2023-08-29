@@ -35,7 +35,8 @@ my_project/
 |
 |--- readme.md
 ```
-
+## To start project
+run py app.py
 ## Features
 
 ### Done
