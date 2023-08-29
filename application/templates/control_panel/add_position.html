@@ -1,6 +1,27 @@
 {% extends "/control_panel/index.html" %}
 {% block title %} Admin Panel {% endblock %}
+<style nonce="trv5tedth15217">
+    .close-span{
+        font-size:30px;
+    }
 
+    .model-border{
+        border-radius:38px;
+    }
+
+    .submit-button{
+        background-color:#d4edda;
+        color:#155724;
+        border-color: #c3e6cb;
+    }
+
+    .close-button{
+        color: #383d41;
+        background-color: #e2e3e5;
+        border-color: #d6d8db;
+    }
+
+</style>
 {% block model %}
 
 {% endblock %}
@@ -9,7 +30,7 @@
 {% block content %}
 
     <!-- Modal -->
-    <div class="modal fade" id="ModalCenter2" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+    <div class="modal fade model-border" id="ModalCenter2" tabindex="-1" data-bs-backdrop="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form method='post' action='{{ url_for("control_panel.add_position") }}'>
@@ -18,7 +39,7 @@
                             <div class='wood-text'> Add New Position</div>
                         </div>
                         <a href="{{ url_for('control_panel.admin_panel') }}">
-                            <span aria-hidden="true" style="font-size:30px;">&times;</span>
+                            <span aria-hidden="true" class="close-span" >&times;</span>
                         </a>
                     </div>
 
@@ -41,11 +62,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <input type='submit' value='Submit'
-                               style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
-                               class='btn btn-primary'>
-                        <a href="{{ url_for('control_panel.admin_panel') }}" class="btn btn-secondary"
-                           style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;">Close</a>
+                        <input type='submit' value='Submit' class='btn btn-primary submit-button'>
+                        <a href="{{ url_for('control_panel.admin_panel') }}" class="btn btn-secondary close-button" >Close</a>
                     </div>
                 </form>
             </div>
@@ -57,7 +75,7 @@
 {% block js %}
     <!-- Optional JavaScript -->
 
-    <script>
+    <script nonce="trv5tth15">
         let modal = new bootstrap.Modal(document.querySelector('#ModalCenter2'), {backdrop: 'static', position: false});
         modal.toggle();
     </script>

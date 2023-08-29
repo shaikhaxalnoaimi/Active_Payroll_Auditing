@@ -2,14 +2,41 @@
 
 {% block title %} Manage Files {% endblock %}
 
+<style nonce="trv5tedth15217">
+    .close-span{
+        font-size:25px;
+        color:#155724;
+    }
+
+    .file-deleted{
+        background-color:#d4edda;
+        color:#155724;
+    }
+
+    .file-not-selected{
+        background-color:#f8d7da;
+        color:#721c24;
+    }
+
+    .delete-button{
+        background-color: #e2e3e5;
+        color:#383d41;
+    }
+
+    .checkbox-css{
+        text-align: right;
+    }
+
+</style>
+
 {% block content %}
 <!--    Message if the file deleted successfuly (master data)-->
 {% if file_deleted1==True %}
       {{ form.csrf_token }}
-<div class="alert alert-dismissible" style="background-color:#d4edda; color:#155724; " role="alert">
+<div class="alert alert-dismissible file-deleted" role="alert">
     <span><b>File/s Deleted Successfuly!</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+        <span aria-hidden="true" class="close-span">×</span>
     </button>
 </div>
 {% endif %}
@@ -17,10 +44,10 @@
 <!--    Message if thry to delete before select (no need button swill be disabled if no select)-->
 {% if selected_file1==False %}
       {{ form.csrf_token }}
-<div class="alert alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+<div class="alert alert-dismissible file-not-selected" role="alert">
     <span><b>Please select at least one file to delete!</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+        <span aria-hidden="true" class="close-span">×</span>
     </button>
 </div>
 {% endif %}
@@ -79,10 +106,9 @@
                             <div class=" d-flex">
                                 <button type="submit" name="submit_button"
                                         value="delete"
-                                        style="background-color: #e2e3e5; color:#383d41;"
                                         onclick="return confirm('Are you sure you want to Delete?');"
                                         id="btnDelete"
-                                        class="btn  d-flex align-items-center justify-content-center m-0">
+                                        class="btn  d-flex align-items-center justify-content-center m-0 delete-button">
                                     <em class="material-icons-round opacity-10">delete</em>&emsp;
                                     Delete
                                 </button>
@@ -94,8 +120,7 @@
                             <div class=" d-flex">
                                 <button type="submit" name="submit_button"
                                         value="delete"
-                                        style="background-color: #e2e3e5; color:#383d41;"
-                                        class="btn  d-flex align-items-center justify-content-center m-0"
+                                        class="btn  d-flex align-items-center justify-content-center m-0 delete-button"
                                         id="deleteButton">
                                     <em class="material-icons-round opacity-10">delete</em>&emsp;
                                     Delete
@@ -113,7 +138,7 @@
                         </div>
 
 <!-- Added in-line style -->
-                        <div class="col-4 col-md-4" style="text-align: right;">
+                        <div class="col-4 col-md-4 checkbox-css">
                             <input type="checkbox" name="checkAll" id="checkAll"/> Select All
                         </div>
                 </div>
@@ -199,7 +224,7 @@
 {% block js %}
 
 <!--Select all script (Master)-->
-<script>
+<script nonce="trv5tth15">
     $(document).ready(function () {
         $('#checkAll').click(function (event) {
             if (this.checked) {
@@ -224,7 +249,7 @@
 </script>
 
 <!--Search function that filters the all files-->
-<script>
+<script nonce="trv5tth15">
     function myFunction() {
         var input, filter, table, tr, td, i, txtValue;
         input = document.getElementById("myInput");
@@ -252,7 +277,7 @@
 </script>
 
 <!--Search function that filters the master files-->
-<script>
+<script nonce="trv5tth15">
     function myFunction2() {
         var input, filter, table, tr, td, i, txtValue;
         input = document.getElementById("myInput2");
@@ -281,7 +306,7 @@
 
 
 <!--Search function that filters the master files-->
-<script>
+<script nonce="trv5tth15" >
     function myFunction3() {
         var input, filter, table, tr, td, i, txtValue;
         input = document.getElementById("myInput3");
@@ -309,7 +334,7 @@
 </script>
 
 <!--Disable button if all checkboxes are unchecked (Master)-->
-<script>
+<script nonce="trv5tth15">
     var checkBoxes = $(':checkbox');
     checkBoxes.change(function () {
         $('#btnDelete').prop('disabled', checkBoxes.filter(':checked').length < 1);
@@ -320,7 +345,7 @@
 
 
 <!--Check toggle of checkboxes (Master)-->
-<script>
+<script nonce="trv5tth15">
     function checkToggle(event) {
         var changed = event.target,
             selectAll = document.getElementById('checkAll'),
@@ -348,11 +373,11 @@
 </script>
 
 <!--filtring ths table -->
-<script type="text/javascript" src="/static/assets/js/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript" src="/static/assets/js/bootstrap-datepicker.ar.min.js"></script>
-<script src="/static/assets/js/index.js"></script>
+<script nonce="trv5tth15" type="text/javascript" src="/static/assets/js/bootstrap-datepicker.min.js"></script>
+<script nonce="trv5tth15" type="text/javascript" src="/static/assets/js/bootstrap-datepicker.ar.min.js"></script>
+<script nonce="trv5tth15" src="/static/assets/js/index.js"></script>
 
-<script type="text/javascript">
+<script nonce="trv5tth15" type="text/javascript">
     $(document).ready(function () {
         $('input[type="radio"]').click(function () {
             var inputValue = $(this).attr("value");
@@ -368,7 +393,7 @@
 
 
 //<!-- Added this function -->
-<script>
+<script nonce="trv5tth15">
     $('input[type="radio"]').click(function() {
         if( $('input[type="radio"]').is(':checked') ) {
             $('input[type="checkbox"]').prop("checked", false );

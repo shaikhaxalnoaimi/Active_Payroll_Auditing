@@ -1,5 +1,5 @@
 <!-- Added the styles -->
-<style>
+<style nonce="trv5tedth15217">
     .hide {
         transform: translateX(-17rem) !important;
     }
@@ -33,7 +33,7 @@
             <li class="nav-item">
                 <a
                         class="nav-link {% if 'index' in segment %} active bg-gradient-danger {% endif %}"
-                        href="/index">
+                        href=" {{ url_for('control_panel.index') }} ">
                     <div
                             class="text-white text-center d-flex align-items-center justify-content-center"></div>
                     <span class="nav-link-text ms-2">Audit</span>
@@ -53,7 +53,7 @@
             <li class="nav-item">
                 <a
                         class="nav-link {% if 'Control_Panel' in segment %} active bg-gradient-danger {% endif %}"
-                        href="/admin_panel">
+                        href=" {{url_for('control_panel.admin_panel') }} ">
                     <div
                             class="text-white text-center d-flex align-items-center justify-content-center"></div>
                     <span class="nav-link-text ms-2">Keywords & Positions</span>
@@ -63,7 +63,7 @@
             <li class="nav-item">
                 <a
                         class="nav-link {% if 'managefile' in segment %} active bg-gradient-danger {% endif %}"
-                        href="/managefile">
+                        href=" {{ url_for('control_panel.managefile') }} ">
                     <div
                             class="text-white text-center d-flex align-items-center justify-content-center"></div>
                     <span class="nav-link-text ms-2">Cleaning Files</span>
@@ -106,7 +106,7 @@
 </aside>
 
 <!-- Added the function -->
-<script>
+<script nonce="trv5tth15">
     $(document).ready(function () {
         /*window.setTimeout(function() {
             $('aside').removeClass('hi').addClass('hide');

@@ -2,6 +2,72 @@
 
 {% block title %} Admin Panel {% endblock %}
 <link rel="stylesheet" type="text/css" href="/static/assets/css/jquery.dataTables.css"/>
+
+<style nonce="trv5tedth15217">
+    .keyword-delete{
+        background-color:#d4edda;
+        color:#155724;
+    }
+
+    .close-span{
+        color:#155724;
+    }
+
+    .search-css{
+        display:none;
+    }
+
+    .add-key-success{
+        background-color:#d4edda;
+        color:#155724;
+        border-color: #c3e6cb;
+    }
+
+    .table-width{
+        width:100%;
+    }
+
+    .editkey-button{
+        width: 12px;
+        background-color:#cce5ff;
+        color:#004085;
+        border-color: #b8daff;
+    }
+
+    .delkey-button{
+        width: 12px;
+        background-color:#f8d7da;
+        color:#721c24;
+        border-color: #f5c6cb;
+    }
+
+    .add-pos-button{
+        background-color:#d4edda;
+        color:#155724;
+        border-color: #c3e6cb;
+    }
+
+    .table-width{
+        width:100%;
+    }
+
+    .editpos-button{
+        width: 12px;
+        background-color:#cce5ff;
+        color:#004085;
+        border-color: #b8daff;
+    }
+
+    .delpos-button{
+        width: 12px;
+        background-color:#f8d7da;
+        color:#721c24;
+        border-color: #f5c6cb;
+    }
+
+
+</style>
+
 {% block content %}
 <!--######################################################################################-->
 <!--#################### This section related MANAGE THE  KEYWORDS ############-->
@@ -18,11 +84,11 @@
             </div>
             <!--            notification message if the keyword deleted successfully -->
             {% if deleted==True %}
-            <div class="alert  alert-dismissible " style="background-color:#d4edda; color:#155724;" role="alert">
+            <div class="alert  alert-dismissible keyword-delete" role="alert">
                 <span><b>The keyword deleted successfully!</b></span>
                 <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert"
                         aria-label="Close">
-                    <span aria-hidden="true" style="color:#155724;">×</span>
+                    <span aria-hidden="true" class="close-span">×</span>
                 </button>
             </div>
             {% endif %}
@@ -34,8 +100,8 @@
                         <form method="post">
                             {{keywords_form.csrf_token}}
                             {{keywords_form.file_name(class="form-select", style="width:fit-content; display:inline")}}
-                            {{keywords_form.keyword_label(class="form-select", style="width:fit-content; display:inline")}}
-                            <input type="submit" id="form-btn" style="display:none" class="" value="Search">
+                            {{keywords_form.keyword_label(class="form-select",  style="width:fit-content; display:inline")}}
+                            <input type="submit" id="form-btn" class="search-css" value="Search">
                         </form>
                     </div>
 
@@ -43,8 +109,7 @@
                     <div class="col-2 mb-4">
                         <p class='text-right'>
                             <a href='{{url_for("control_panel.add_keywords")}}'
-                               style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
-                               class="btn btn-success align-items-center justify-content-center m-0">
+                               class="btn btn-success align-items-center justify-content-center m-0 add-key-success">
                                 <!--                      <em class="material-icons-round opacity-10">add</em>-->
                                 Add New
                             </a>
@@ -52,7 +117,7 @@
                     </div>
                 </div>
 
-                <table class="hover row-border table-bordered" id="myTable1" style="width:100%;">
+                <table class="hover row-border table-bordered table-width" id="myTable1" >
                     <thead>
                     {% for col in all_data_mk_columns %}
                     <th>{{col}}</th>
@@ -67,8 +132,7 @@
                         {%endfor%}
                         <td>
                             <a href='{{url_for("control_panel.edit_keyword",uid=row[0])}}'
-                               style="width: 12px; background-color:#cce5ff; color:#004085; border-color: #b8daff;"
-                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-secondary '>
+                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-secondary editkey-button'>
                                 <em class="material-icons-round opacity-10">edit</em>
                             </a>
                         </td>
@@ -76,8 +140,7 @@
 
                             <a type="submit"
                                href='{{url_for("control_panel.delete_keyword",uid=row[0],selected_value=row[2],fname=row[1] )}}'
-                               style="width: 12px; background-color:#f8d7da; color:#721c24; border-color: #f5c6cb;"
-                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-danger'
+                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-danger delkey-button'
                                onclick='return confirm("Are You Sure You Want To Delete This Keyword?")'>
                                 <em class="material-icons-round opacity-10">delete</em></a>
                         </td>
@@ -113,8 +176,7 @@
                     <div class="col-12 mb-4">
                         <p class='text-right'>
                             <a href='{{url_for("control_panel.add_position")}}'
-                               style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
-                               class="btn btn-success align-items-center justify-content-center m-0">
+                               class="btn btn-success align-items-center justify-content-center m-0 add-pos-button">
                                 <!--                      <em class="material-icons-round opacity-10">add</em>-->
                                 Add New
                             </a>
@@ -124,7 +186,7 @@
 
                 <!--                High Ranking Positions Table-->
 
-                <table class="hover row-border table-bordered" id="myTable" style="width:100%;">
+                <table class="hover row-border table-bordered table-width" id="myTable">
                     <thead>
                     {% for col in all_data_positions_columns %}
                     <th>{{col}}</th>
@@ -139,16 +201,14 @@
                         {%endfor%}
                         <td>
                             <a href='{{url_for("control_panel.edit_position",uid=row[0])}}'
-                               style="width: 12px; background-color:#cce5ff; color:#004085; border-color: #b8daff;"
-                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-secondary '>
+                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-secondary editpos-button'>
                                 <em class="material-icons-round opacity-10">edit</em>
                             </a>
                         </td>
                         <td>
 
                             <a type="submit" href='{{url_for("control_panel.delete_position",uid=row[0])}}'
-                               style="width: 12px; background-color:#f8d7da; color:#721c24; border-color: #f5c6cb;"
-                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-danger'
+                               class='btn d-flex align-items-center justify-content-center m-0 btn btn-danger delpos-button'
                                onclick='return confirm("Are You Sure You Want To Delete This Position?")'>
                                 <em class="material-icons-round opacity-10">delete</em></a>
                         </td>
@@ -166,15 +226,15 @@
 {% endblock content %}
 
 {% block js %}
-<script type="text/javascript"
+<script nonce="trv5tth15" type="text/javascript"
         src="/static/assets/js/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript"
+<script nonce="trv5tth15" type="text/javascript"
         src="/static/assets/js/bootstrap-datepicker.ar.min.js"></script>
-<script type="text/javascript" charset="utf8"
+<script nonce="trv5tth15" type="text/javascript" charset="utf8"
         src="/static/assets/js/jquery.dataTables.js"></script>
-<script src="/static/assets/js/index.js"></script>
+<script nonce="trv5tth15" src="/static/assets/js/index.js"></script>
 
-<script>
+<script nonce="trv5tth15">
     let file_name_select = document.getElementById('file_name');
     let keyword_label_select = document.getElementById('keyword_label');
     window.onload = function () {
@@ -199,7 +259,7 @@
 
 </script>
 
-<script type="text/javascript">
+<script nonce="trv5tth15" type="text/javascript">
     $(document).ready(function () {
         $('#myTable').DataTable({
             columns: [
@@ -217,7 +277,7 @@
 </script>
 
 
-<script type="text/javascript">
+<script nonce="trv5tth15" type="text/javascript">
     $(document).ready(function () {
         $('#myTable1').DataTable();
     });
@@ -225,7 +285,7 @@
 
 
 <!-- customize css  -->
-<script>
+<script nonce="trv5tth15">
     //$('#form-btn').hide();
     function post() {
         $('#keyword_label').on('change',function() {

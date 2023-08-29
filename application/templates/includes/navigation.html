@@ -1,5 +1,5 @@
 <!-- Added style -->
-<style>
+<style nonce="trv5tedth15217">
     @media screen and (max-width: 600px) {
         .new {
             flex: 1.2 !important;
@@ -80,6 +80,10 @@
             scale: 1
         }
     }
+
+    .menu-left{
+        float: left;
+    }
 </style>
 
 <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl bg-gradient-dark mt-3"
@@ -88,12 +92,12 @@
         <div class="col">
 
             <!-- Added in-line style -->
-            <li class="collapse navbar-collapse mt-sm-0 mt-2 px-0" id="navbar" style="float: left;">
+            <li class="collapse navbar-collapse mt-sm-0 mt-2 px-0 menu-left" id="navbar">
                 <ul class="navbar-nav me-0 ms-auto justify-content-end">
 
                     <!-- Removed class "d-xl-none" from <li>-->
                     <li class="nav-item pe-3 d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                        <a href="javascript:; " class="nav-link text-body p-0" id="iconNavbarSidenav">
                             <div class="sidenav-toggler-inner">
                                 <i class="sidenav-toggler-line"></i>
                                 <i class="sidenav-toggler-line"></i>
@@ -109,7 +113,7 @@
 
         <!-- Added class "new" -->
         <div class="col new">
-            <a class="navbar-brand m-0 p-0" href="/index">
+            <a class="navbar-brand m-0 p-0" href="{{ url_for('control_panel.index') }}">
                 <img src="/static/assets/img/NAO-logo.svg" class="navbar-brand-img" alt="main_logo">
             </a>
         </div>
@@ -124,7 +128,7 @@
 </nav>
 
 <!-- Added this function -->
-<script>
+<script nonce="trv5tth15">
     $(document).ready(function () {
         window.setTimeout(function () {
             $('#iconNavbarSidenav > div > i').addClass('shine');

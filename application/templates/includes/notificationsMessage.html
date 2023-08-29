@@ -1,3 +1,31 @@
+<style nonce="trv5tedth15217">
+    .close-alert{
+        color:#155724;
+    }
+
+    .value-exists{
+        background-color:#fff3cd;
+        color:#856404;
+    }
+
+    .value-added{
+        background-color:#d4edda;
+        color:#155724;
+    }
+
+    .invalid-input{
+        background-color:#fff3cd;
+        color:#856404;
+    }
+
+    .value-updated-success{
+        background-color:#d4edda;
+        color:#155724;
+    }
+
+
+</style>
+
 <!--######################################################################################-->
 <!--################################Alert Messages #######################################-->
 <!--######################################################################################-->
@@ -48,47 +76,47 @@
 <!-- The validation messages for adding and editing,deleted keywords -->
 <!--######################################################################################-->
 {% if exits==True %}
-<div class="alert  alert-dismissible " style="background-color:#fff3cd; color:#856404;"  role="alert">
+<div class="alert  alert-dismissible value-exists" role="alert">
     <span><b>The value already exits!</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="color:#155724;">×</span>
+        <span aria-hidden="true" class="close-alert">×</span>
     </button>
 </div>
 {% endif %}
 
 {% if exits==False %}
-<div class="alert  alert-dismissible " style="background-color:#d4edda; color:#155724;" role="alert">
+<div class="alert  alert-dismissible value-added" role="alert">
     <span><b>The value Added Successfully!</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="color:#155724;">×</span>
+        <span aria-hidden="true" class="close-alert">×</span>
     </button>
 </div>
 {% endif %}
 
 
 {% if exits=='Invalid' %}
-<div class="alert  alert-dismissible " style="background-color:#fff3cd; color:#856404;"  role="alert">
+<div class="alert  alert-dismissible invalid-input" role="alert">
     <span><b>Invalid input. Only letters with or without underscores are allowed.</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="color:#155724;">×</span>
+        <span aria-hidden="true" class="close-alert">×</span>
     </button>
 </div>
 {% endif %}
 
 {% if updated==False %}
-    <div class="alert  alert-dismissible " style="background-color:#d4edda; color:#155724;" role="alert">
+    <div class="alert  alert-dismissible value-updated-success" role="alert">
         <span><b>The value Updated Successfully!</b></span>
         <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true" style="color:#155724;">×</span>
+            <span aria-hidden="true" class="close-alert">×</span>
         </button>
     </div>
 {% endif %}
 
 {% if updated=='Invalid' %}
-<div class="alert  alert-dismissible " style="background-color:#fff3cd; color:#856404;"  role="alert">
+<div class="alert  alert-dismissible invalid-input"  role="alert">
     <span><b>Invalid input. Only letters with or without underscores are allowed.</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="color:#155724;">×</span>
+        <span aria-hidden="true" class="close-alert">×</span>
     </button>
 </div>
 {% endif %}
@@ -96,19 +124,19 @@
 
 
 {% if updated==True %}
-    <div class="alert  alert-dismissible " style="background-color:#fff3cd; color:#856404;"  role="alert">
+    <div class="alert  alert-dismissible value-exists" role="alert">
         <span><b>You trying to update the current value with a value that already exits!</b></span>
         <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true" style="color:#155724;">×</span>
+            <span aria-hidden="true" class="close-alert">×</span>
         </button>
     </div>
 {% endif %}
 
 {% if deleted==True %}
-    <div class="alert  alert-dismissible " style="background-color:#d4edda; color:#155724;" role="alert">
+    <div class="alert  alert-dismissible value-updated-success" role="alert">
         <span><b>The value deleted successfully!</b></span>
         <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true" style="color:#155724;">×</span>
+            <span aria-hidden="true" class="close-alert">×</span>
         </button>
     </div>
 {% endif %}

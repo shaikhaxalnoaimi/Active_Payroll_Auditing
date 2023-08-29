@@ -3,6 +3,33 @@
 
 {% block title %} Overtime Audit {% endblock %}
 
+<style nonce="trv5tedth15217">
+    .close-alert-span{
+        font-size:25px;
+        color:#155724;
+    }
+
+    .not-up-to-standards{
+        background-color:#f8d7da;
+        color:#721c24;
+    }
+
+    .file-exists{
+        background-color:#fff3cd;
+        color:#856404;
+    }
+
+    .file-uploaded{
+        background-color:#d4edda;
+        color:#155724;
+    }
+
+    .column-not-match{
+        background-color:#f8d7da;
+        color:#721c24;
+    }
+
+</style>
 
 {% block content %}
 
@@ -15,30 +42,30 @@
 <!--######################################################################################-->
 <!--    Message if the file not the correct one (overtime payroll format)-->
 {% if error==True %}
-<div class="alert  alert-dismissible " style="background-color:#f8d7da; color:#721c24;" role="alert">
+<div class="alert  alert-dismissible not-up-to-standards" role="alert">
     <span><b>Sorry! The uploaded file does not follow the employee master standards! Please try another file!</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+        <span aria-hidden="true" class="close-alert-span">×</span>
     </button>
 </div>
 {% endif %}
 
 <!--    Message if the file already uploaded before (overtime payroll format)-->
 {% if RecivedMessage=="exists" %}
-<div class="alert alert-dismissible" style="background-color:#fff3cd; color:#856404;" role="alert">
+<div class="alert alert-dismissible file-exists" role="alert">
     <span><b>This file exists already!</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+        <span aria-hidden="true" class="close-alert-span">×</span>
     </button>
 </div>
 {% endif %}
 
 <!--    Message if the file uploaded successfuly (employee payroll)-->
 {% if RecivedMessage=="success" %}
-<div class="alert alert-dismissible" style="background-color:#d4edda; color:#155724; " role="alert">
+<div class="alert alert-dismissible file-uploaded" role="alert">
     <span><b>File uploaded Successfuly!</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+        <span aria-hidden="true" class="close-alert-span">×</span>
     </button>
 </div>
 {% endif %}
@@ -46,10 +73,10 @@
 
 <!--    Message if the file uploaded not match columns names (employee payroll)-->
 {% if RecivedMessage=="incorrect" %}
-<div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+<div class="alert  alert-dismissible column-not-match"  role="alert">
     <span><b>Sorry! The columns of the uploaded file does not match required columns! Please try another file!</b></span>
     <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-         <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+         <span aria-hidden="true" class="close-alert-span">×</span>
     </button>
 </div>
 {% endif %}

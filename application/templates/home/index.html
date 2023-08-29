@@ -2,78 +2,157 @@
 
 {% block title %} Employee Information Audit {% endblock %}
 
+<style nonce="trv5tedth15217">
+
+    .file-exists{
+        background-color:#fff3cd;
+        color:#856404;
+    }
+
+    .close-span{
+        font-size:25px;
+        color:#155724;
+    }
+
+    .missing-column{
+        background-color:#f8d7da;
+        color:#721c24;
+    }
+
+    .upload-success{
+        background-color:#d4edda;
+        color:#155724;
+    }
+
+    .modal-border{
+         border-radius:38px;
+    }
+
+    .confirm{
+        color:#343a40;
+        font-size:20px;
+        font-weight: bold;
+    }
+
+    .conflict-display{
+        display:none;
+    }
+
+    .submit-button{
+        background-color:#d4edda;
+        color:#155724;
+        border-color: #c3e6cb;
+    }
+
+    .close-button{
+        color: #383d41;
+        background-color: #e2e3e5;
+        border-color: #d6d8db;
+    }
+
+    .upload-button{
+        background-color: #e2e3e5;
+        color:#383d41;
+    }
+
+    .img-margin{
+        margin-bottom: 13px
+    }
+
+    .generate-button{
+        background-color:#d4edda;
+        color:#155724;
+    }
+
+    .emp-master{
+        background-color:#f8d7da;
+        color:#721c24;
+        font-size: 17px;
+    }
+
+    .emp-master2{
+        background-color:#d4edda;
+        color:#155724;
+        font-size:17px;
+    }
+
+
+
+
+</style>
+
 {% block content %}
     <!--######################################################################################-->
     <!--################################Alert Messages #######################################-->
     <!--######################################################################################-->
 
     {% if missing_list=="exists" %}
-        <div class="alert alert-dismissible" style="background-color:#fff3cd; color:#856404;" role="alert"
+        <div class="alert alert-dismissible file-exists" role="alert"
              xmlns="http://www.w3.org/1999/html">
             {% if missing_columns %}
                 <span><b>The sheet names {{ missing_columns }} in uploaded payroll file exists already!</b></span>
             {% endif %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% elif missing_list == "MissingColumnsPayroll" %}
-        <div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column"  role="alert">
             There is a missing columns in payroll file:
             {% for value in missing_columns %}
                 <span><b> {{ missing_columns[(loop.index)-1]}} </b></span>
                 in sheet {{ recevied_list }}
             {% endfor %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% endif %}
 
     {% if recevied_list == 'MissingColumnsPayroll' %}
-        <div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column" role="alert">
             There is a missing columns in payroll file:
             {% for val in val2 %}
                 <span><b> {{ val2[(loop.index)-1]}} </b></span>
                 in sheet {{ val3 }}
             {% endfor %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% endif %}
 
     {% if missing_columns=="exists" %}
-        <div class="alert alert-dismissible" style="background-color:#fff3cd; color:#856404;" role="alert">
+        <div class="alert alert-dismissible file-exists"  role="alert">
             {% if missing_columns %}
                 <span><b>The sheet names {{ conflict_list }} in uploaded payroll file exists already!</b></span>
             {% endif %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% elif missing_columns== "MissingColumnsPayroll" %}
-        <div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column" role="alert">
             There is a missing columns in payroll file:
             {% for value in received_value %}
                 <span><b> {{ value[(loop.index)-1]}} </b></span>
                 in sheet {{ conflict_list }}
             {% endfor %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% endif %}
 
     {% if val2 and val3 and received_value == "MissingColumnsPayroll" %}
-        <div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column" role="alert">
             There is a missing columns in payroll file:
             {% for val in val2 %}
                 <span><b> {{ val[(loop.index)-1]}} </b></span>
                 in sheet {{ val3 }}
             {% endfor %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% endif %}
@@ -81,7 +160,7 @@
 
     <!--    Message if the file already uploaded before (overtime payroll format)-->
     {% if RecivedMessage=="exists" %}
-        <div class="alert alert-dismissible" style="background-color:#fff3cd; color:#856404;" role="alert">
+        <div class="alert alert-dismissible file-exists" role="alert">
             {% if sucess_sheet and missing_columns %}
                 <span><b>The sheet names {{ sucess_sheet }} in uploaded payroll file exists already!</b></span>
             {% elif missing_columns %}
@@ -90,11 +169,11 @@
                 <span><b>This file {{ conflict_list }} exists already!</b></span>
             {% endif %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% elif RecivedMessage=="success" %}
-        <div class="alert alert-dismissible" style="background-color:#d4edda; color:#155724; " role="alert">
+        <div class="alert alert-dismissible upload-success" role="alert">
             {% if sucess_sheet %}
                 <span><b>File {{ sucess_sheet }} uploaded Successfuly!</b></span>
             {% else %}
@@ -102,49 +181,49 @@
 
             {% endif %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% elif RecivedMessage=="incorrect" %}
-        <div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible invalid missing-column" role="alert">
             <span><b>There is an issue in {{ value }}. Please inform technical team</b></span>
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% elif RecivedMessage=="invalidsheet" %}
-        <div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column" role="alert">
             <span><b>Your are trying to upload file with invalid sheet names: {{ conflict_list }}. The accepted name is month-year for Payroll and month-Master for Master</b></span>
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% elif RecivedMessage == 'MissingColumnsPayroll' %}
-        <div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column" role="alert">
             There is a missing columns in payroll file:
             {% for missing_column in missing_columns %}
                 <span><b> {{ missing_list[(loop.index)-1]}} </b></span>
                 in sheet {{ missing_column }}
             {% endfor %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
 
     {% elif RecivedMessage == 'MissingColumns' %}
-        <div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column" role="alert">
             There is a missing columns in uploaded master file:
             {% for missing_column in missing_columns %}
                 <span><b>{{ missing_column }} </b> , </span>
             {% endfor %}
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
 
     {% elif RecivedMessage == 'Conflict' %}
         <!-- Modal -->
-        <div class="modal fade" id="ModalCenter1" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+        <div class="modal fade modal-border" id="ModalCenter1" tabindex="-1" data-bs-backdrop="true" >
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <form method='post' action='{{ url_for("home_blueprint.conflict") }}'>
@@ -153,7 +232,7 @@
                                 <div class='wood-text'> Confirmation Required</div>
                             </div>
                             <a href="">
-                                <span aria-hidden="true" style="font-size:30px;">&times;</span>
+                                <span aria-hidden="true" class="close-span">&times;</span>
                             </a>
                         </div>
 
@@ -163,7 +242,7 @@
                             <!-- the form content -->
 
                             <div class='form-group'>
-                                <p style="color:#343a40; font-size:20px;  font-weight: bold;">Please confirm which
+                                <p class="confirm">Please confirm which
                                     columns
                                     required in auditing:</p>
                                 {% for conflicts in conflict_list %}
@@ -179,7 +258,7 @@
 
                             <div class='form-group'>
                                 {% for conflicts in conflict_list %}
-                                    <input type="input" style="display:none;" name="coflict_list"
+                                    <input type="input" class="conflict-display"  name="coflict_list"
                                            value="{{ conflicts }}"/>
                                 {% endfor %}
                             </div>
@@ -187,10 +266,8 @@
 
                         <div class="modal-footer">
                             <input type='submit' name='action' value='Confirm'
-                                   style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
-                                   class='btn btn-primary'>
-                            <a href="index" class="btn btn-secondary"
-                               style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;">Close</a>
+                                   class='btn btn-primary submit-button'>
+                            <a href=" {{ url_for('index') }}" class="btn btn-secondary close-button">Close</a>
                         </div>
                     </form>
                 </div>
@@ -199,7 +276,7 @@
 
     {% elif RecivedMessage == 'PayrollConflict' %}
         <!-- Modal -->
-        <div class="modal fade" id="ModalCenter2" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+        <div class="modal fade modal-border" id="ModalCenter2" tabindex="-1" data-bs-backdrop="true" >
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <form method='post' action='{{ url_for("home_blueprint.conflict2") }}'>
@@ -208,7 +285,7 @@
                                 <div class='wood-text'> Confirmation Required</div>
                             </div>
                             <a href="">
-                                <span aria-hidden="true" style="font-size:30px;">&times;</span>
+                                <span aria-hidden="true" class="close-span">&times;</span>
                             </a>
                         </div>
 
@@ -242,7 +319,7 @@
                                 <div class='form-group'>
                                     {% for conflicts in conflict_list %}
                                         {% for conflict in conflicts %}
-                                            <input type="input" style="display:none;" name="conflicts"
+                                            <input type="input" class="conflict-display" name="conflicts"
                                                    value="{{ conflict }}"/>
                                         {% endfor %}
                                     {% endfor %}
@@ -271,10 +348,8 @@
                         </div>
                         <div class="modal-footer">
                             <input type='submit' name='action' value='Confirm'
-                                   style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
-                                   class='btn btn-primary'>
-                            <a href="index" class="btn btn-secondary"
-                               style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;">Close</a>
+                                   class='btn btn-primary submit-button'>
+                            <a href=" {{ url_for('index') }}" class="btn btn-secondary close-button">Close</a>
                         </div>
                     </form>
                 </div>
@@ -282,7 +357,7 @@
         </div>
     {% elif RecivedMessage == 'not_mandit_col' %}
         <!-- Modal -->
-        <div class="modal fade" id="ModalCenter3" tabindex="-1" data-bs-backdrop="true" style="border-radius:38px;">
+        <div class="modal fade modal-border" id="ModalCenter3" tabindex="-1" data-bs-backdrop="true" >
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <form method='post'
@@ -292,7 +367,7 @@
                                 <div class='wood-text'> Confirmation Required</div>
                             </div>
                             <a href="">
-                                <span aria-hidden="true" style="font-size:30px;">&times;</span>
+                                <span aria-hidden="true" class="close-span">&times;</span>
                             </a>
                         </div>
 
@@ -302,7 +377,7 @@
                             <!-- the form content -->
 
                             <div class='form-group'>
-                                <p style="color:#343a40; font-size:20px;  font-weight: bold;">The following columns are
+                                <p class="confirm">The following columns are
                                     not in
                                     the uploaded file by click on confirm button you are confirmaing that these columns
                                     are not
@@ -326,10 +401,8 @@
 
                             <div class="modal-footer">
                                 <input type='submit' name='action' value='Confirm'
-                                       style="background-color:#d4edda; color:#155724; border-color: #c3e6cb;"
-                                       class='btn btn-primary'>
-                                <a href="index" class="btn btn-secondary"
-                                   style="color: #383d41; background-color: #e2e3e5; border-color: #d6d8db;">Close</a>
+                                       class='btn btn-primary submit-button'>
+                                <a href=" {{ url_for('index') }}" class="btn btn-secondary close-button">Close</a>
                             </div>
                         </div>
                     </form>
@@ -337,27 +410,27 @@
             </div>
         </div>
     {% elif RecivedMessage == 'incorrect' %}
-        <div class="alert  alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column" role="alert">
             <span><b>Sorry! The uploaded file does not follow the required file standards! Please try another file! </b></span>
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
 
         <!--    Message if the file not the correct one (overtime payroll format)-->
     {% elif error==True %}
-        <div class="alert  alert-dismissible " style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column" role="alert">
             <span><b>{{ value }}</b></span>
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
 
     {% elif error1==True %}
-        <div class="alert  alert-dismissible " style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert  alert-dismissible missing-column" role="alert">
             <span><b>{{ value }}</b></span>
             <button type="button" class="btn-close text-lg py-2 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% endif %}
@@ -365,10 +438,10 @@
 
     <!--    Message if the file uploaded not match columns names (master data)-->
     {% if file_path==False %}
-        <div class="alert alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert alert-dismissible missing-column"  role="alert">
             <span><b>Please select the Employee Master and Payroll files to start auditing!</b></span>
             <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% endif %}
@@ -376,10 +449,10 @@
 
     <!--    Message when user try to generate empty report-->
     {% if empty_report_error==True %}
-        <div class="alert alert-dismissible" style="background-color:#f8d7da; color:#721c24;" role="alert">
+        <div class="alert alert-dismissible missing-column" role="alert">
             <span><b>Sorry, Generating empty reports is not allowed, please switch on at least one table!</b></span>
             <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true" style="font-size:25px; color:#155724;">×</span>
+                <span aria-hidden="true" class="close-span">×</span>
             </button>
         </div>
     {% endif %}
@@ -410,7 +483,7 @@
                             </div>
                             <br>
 
-                            <form method="post" action="index" enctype="multipart/form-data">
+                            <form method="post" action=" index" enctype="multipart/form-data">
                                 <!------------------form to upload file------------------->
                                 <div class="selectt1  option1">
                                     <div class="row">
@@ -431,8 +504,7 @@
                                             <div class="d-flex">
                                                 <button type="submit" name="upload" value="upload_Employymaster"
                                                         id="UploadMaster"
-                                                        style="background-color: #e2e3e5; color:#383d41;"
-                                                        class="btn d-flex align-items-center justify-content-center m-0">
+                                                        class="btn d-flex align-items-center justify-content-center m-0 upload-button">
                                                     <em class="material-icons-round opacity-10">upload</em>&emsp;
                                                     Upload Master
                                                 </button>
@@ -444,7 +516,7 @@
 
                             </form>
 
-                            <form method="post" action="index" enctype="multipart/form-data">
+                            <form method="post" action=" index " enctype="multipart/form-data">
                                 <div class="selectt1 option2">
                                     <div class="row">
                                         <div class="col-12 col-md-6 m-md-0 mb-2">
@@ -463,8 +535,7 @@
                                             <div class=" d-flex">
                                                 <button type="submit" name="upload" value="upload_Employypayroll"
                                                         id="UploadPayroll"
-                                                        style="background-color: #e2e3e5; color:#383d41;"
-                                                        class="btn d-flex align-items-center justify-content-center m-0">
+                                                        class="btn d-flex align-items-center justify-content-center m-0 upload-button">
                                                     <em class="material-icons-round opacity-10">upload</em>&emsp;
                                                     Upload Payroll
                                                 </button>
@@ -485,7 +556,7 @@
                                 Auditing</h6>
                             <br>
                             <!------------------form to upload file------------------->
-                            <form role="form" method="post" action="auditingProcess" enctype="multipart/form-data"
+                            <form role="form" method="post" action=" auditingProcess " enctype="multipart/form-data"
                                   onSubmit="Start_Auditing()">
                                 {{ selectform_master.hidden_tag() }}
                                 <div class="row">
@@ -514,15 +585,14 @@
                                             <div class=" d-flex">
                                                 <button type="submit" name="EmployeeInfoAudit_btn"
                                                         value="EmployeeInfoAudit_table"
-                                                        style="background-color: #e2e3e5; color:#383d41;"
                                                         id="GenerateReport"
 
-                                                        class="btn  d-flex align-items-center justify-content-center m-0">
+                                                        class="btn  d-flex align-items-center justify-content-center m-0 upload-button">
                                                     <em class="material-icons-round opacity-10">check</em>&emsp;
                                                     Start Auditing
                                                 </button>
                                                 <img id="loadImgDate" src="/static/assets/img/loading.gif"
-                                                     style="margin-bottom: 13px" width="40" height="40">
+                                                      class="img-margin" width="40" height="40">
 
                                             </div>
                                         </div>
@@ -1114,11 +1184,12 @@
                     <div class="card-body pb-3 scroll">
 
                         <div class="tab">
-                            <button class="tablinks" onclick="openCity(event, '1')">Employee Information</button>
-                            <button class="tablinks" onclick="openCity(event, '2')">Deduction</button>
-                            <button class="tablinks" onclick="openCity(event, '3')">Allowance</button>
-                            <button class="tablinks" onclick="openCity(event, '4')">Overtime</button>
+                            <button class="tablinks" id="EmployeeInf" >Employee Information</button>
+                            <button class="tablinks" id="Deduction" >Deduction</button>
+                            <button class="tablinks" id="Allowance" >Allowance</button>
+                            <button class="tablinks" id="Overtime" >Overtime</button>
                         </div>
+
 
                         <!-------------------------------------------------------
                 --------------Employee Information section---------------
@@ -1133,15 +1204,14 @@
                         no_invalid_annual !=True or no_invalid_sick_leave !=True or
                         no_duplicate_high_rank_posisiton !=True or no_missing_grade !=True or
                         no_missing_material_status !=True %}
-                                    <form method="post" id="EmployInfoForm" action="/downloadAuditedEmployeeInfo">
+                                    <form method="post" id="EmployInfoForm" action="/downloadAuditedEmployeeInfo ">
                                     <div class="col-12 col-md-12">
                                         <div class=" d-flex  justify-content-end">
                                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                             <button type="submit"
                                                     id="EmployeeInfoButton"
                                                     name="EmployInfoReport"
-                                                    style="background-color:#d4edda; color:#155724; " ,
-                                                    class="btn  d-flex align-items-center justify-content-center m-0">
+                                                    class="btn  d-flex align-items-center justify-content-center m-0 generate-button">
                                                 <em class="material-icons-round opacity-10">download</em>&emsp;
                                                 Generate Report
                                             </button>
@@ -1151,8 +1221,7 @@
                                     </div>
 
 
-                                    <p class="container2 head-text d-flex align-items-center justify-content-center"
-                                       style="background-color:#f8d7da; color:#721c24; font-size: 17px">
+                                    <p class="container2 head-text d-flex align-items-center justify-content-center emp-master">
                                         <em class="material-symbols-outlined">error_circle_rounded</em>
                                         &ensp;
                                         Employee Master
@@ -1440,8 +1509,7 @@
 
                                     <br>
                                 {% else %}
-                                    <p class="container2 head-text d-flex align-items-center justify-content-center"
-                                       style="background-color:#d4edda; color:#155724; font-size:17px;">
+                                    <p class="container2 head-text d-flex align-items-center justify-content-center emp-master2">
                                         &ensp;
                                         Employee Master
 
@@ -1896,15 +1964,14 @@
                             <!------------This section shows the switch buttons  and Generate report button ------------->
                             <div class="card">
 
-                                <form method="post" id="DeductionForm" action="/downloadAuditedDeduction">
+                                <form method="post" id="DeductionForm" action=" /downloadAuditedDeduction ">
                                     <!--                            <div class="col-12 col-md-12">-->
                                     <div class="d-flex justify-content-end">
                                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <button type="submit"
                                                 name="DeductionReport"
                                                 id="DeducConfirmButton"
-                                                style="background-color:#d4edda; color:#155724; "
-                                                class="btn  d-flex align-items-center justify-content-center m-0">
+                                                class="btn  d-flex align-items-center justify-content-center m-0 generate-button">
                                             <em class="material-icons-round opacity-10">download</em>&emsp;
                                             Generate Report
                                         </button>
@@ -1918,8 +1985,7 @@
                             no_invalid_unemployment_allowance_deduction[key] !=True %}
                                             <div class="card-body pb-3 ">
 
-                                                <p class="container2 head-text d-flex align-items-center justify-content-center"
-                                                   style="background-color:#f8d7da; color:#721c24; font-size:17px;">
+                                                <p class="container2 head-text d-flex align-items-center justify-content-center emp-master">
                                                     <em class="material-symbols-outlined">error_circle_rounded</em>
                                                     &ensp;
                                                     Deduction on {{ value }}
@@ -2008,8 +2074,7 @@
                                                 </div>
                                             </div>
                                         {% else %}
-                                            <p class="container2 head-text d-flex align-items-center justify-content-center"
-                                               style="background-color:#d4edda; color:#155724; font-size:17px;">
+                                            <p class="container2 head-text d-flex align-items-center justify-content-center emp-master2">
                                                 <em class="material-symbols-outlined">task_alt</em>
                                                 &ensp;
                                                 Deduction on {{ value }}
@@ -2135,15 +2200,14 @@
                     ------------------------------------------------------->
                             <!------------This section shows the switch buttons  and Generate report button ------------->
                             <div class="card">
-                                <form method="post" id="AllowanceForm" action="/downloadAuditedAllowanmce">
+                                <form method="post" id="AllowanceForm" action="downloadAuditedAllowanmce">
                                     <div class="col-12 col-md-12">
                                         <div class=" d-flex  justify-content-end">
                                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                             <button type="submit"
                                                     name="AllowanceReport"
                                                     id="AllowConfirmButton"
-                                                    style="background-color:#d4edda; color:#155724; "
-                                                    class="btn  d-flex align-items-center justify-content-center m-0">
+                                                    class="btn  d-flex align-items-center justify-content-center m-0 generate-button">
                                                 <em class="material-icons-round opacity-10">download</em>&emsp;
                                                 Generate Report
                                             </button>
@@ -2169,8 +2233,7 @@
                                 no_emp_not_high_positions_comm_allow[key] !=True or
                                 no_emp_not_high_positions_invalid_comm_allow[key] !=True %}
 
-                                                <p class="container2 head-text d-flex align-items-center justify-content-center"
-                                                   style="background-color:#f8d7da; color:#721c24; font-size:17px;">
+                                                <p class="container2 head-text d-flex align-items-center justify-content-center emp-master">
                                                     <em class="material-symbols-outlined">error_circle_rounded</em>
                                                     &ensp;
                                                     Payroll on {{ value }}
@@ -2274,7 +2337,7 @@
                                                     </div>
 
 
-                                                    <!--Check Living Allowance Allowance -->
+                                                    <!--Check Living Allowance -->
                                                     <div class="col-12 col-md-3">
                                                         <p class="switch-title">Living Allowance</p>
                                                         <label class="switch switch-green">
@@ -2295,7 +2358,7 @@
                                                     </div>
 
 
-                                                    <!--Check Social Allowance Allowance -->
+                                                    <!--Check Social Allowance -->
                                                     <div class="col-12 col-md-3">
                                                         <p class="switch-title">Social Allowance</p>
                                                         <label class="switch switch-green">
@@ -2316,7 +2379,7 @@
                                                     </div>
 
 
-                                                    <!--Check Housing Allowance Allowance -->
+                                                    <!--Check Housing Allowance -->
                                                     <div class="col-12 col-md-3">
                                                         <p class="switch-title">Housing Allowance</p>
                                                         <label class="switch switch-green">
@@ -2337,7 +2400,7 @@
                                                     </div>
 
 
-                                                    <!--Check Housing Allowance Allowance -->
+                                                    <!--Check Housing Allowance -->
                                                     <div class="col-12 col-md-3">
                                                         <p class="switch-title">Special Allowance</p>
                                                         <label class="switch switch-green">
@@ -2487,8 +2550,7 @@
 
                                                 </div>
                                             {% else %}
-                                                <p class="container2 head-text d-flex align-items-center justify-content-center"
-                                                   style="background-color:#d4edda; color:#155724; font-size: 17px;">
+                                                <p class="container2 head-text d-flex align-items-center justify-content-center emp-master2">
                                                     <em class="material-symbols-outlined">task_alt</em>
                                                     &ensp;
                                                     Payroll on {{ value }}
@@ -2998,7 +3060,7 @@
                             <!------------This section shows the switch buttons  and Generate report button ------------->
                             <div class="card">
                                 <form method="post" id="EmployOvertimeForm" name="EmployeeOvertimeMainForm"
-                                      action="/downloadAuditedEmployeeOvertime">
+                                      action=" /downloadAuditedEmployeeOvertime ">
                                     <!--Generate overtime report button-->
                                     <div class="col-12 col-md-12">
                                         <div class=" d-flex  justify-content-end">
@@ -3006,8 +3068,7 @@
                                             <button type="submit"
                                                     id="EmployeeOvertimeButton"
                                                     name="EmployOvertimeReport"
-                                                    style="background-color:#d4edda; color:#155724; "
-                                                    class="btn  d-flex align-items-center justify-content-center m-0">
+                                                    class="btn  d-flex align-items-center justify-content-center m-0 generate-button">
                                                 <em class="material-icons-round opacity-10">download</em>&emsp;
                                                 Generate Report
                                             </button>
@@ -3018,8 +3079,7 @@
                                         {% if no_final_summary_regualr_overtime !=True or
                                 no_final_summary_holiday_overtime !=True or
                                 no_not_allowed_overtime !=True %}
-                                            <p class="container2 head-text d-flex align-items-center justify-content-center"
-                                               style="background-color:#f8d7da; color:#721c24;  font-size:17px;">
+                                            <p class="container2 head-text d-flex align-items-center justify-content-center emp-master">
                                                 <em class="material-symbols-outlined">error_circle_rounded</em>
                                                 &ensp;
                                                 Overtime Results
@@ -3108,8 +3168,7 @@
 
                                             </div>
                                         {% else %}
-                                            <p class="container2 head-text d-flex align-items-center justify-content-center"
-                                               style="background-color:#d4edda; color:#155724; font-size:17px;">
+                                            <p class="container2 head-text d-flex align-items-center justify-content-center emp-master2">
                                                 <em class="material-symbols-outlined">task_alt</em>
                                                 &ensp;
                                                 Overtime Results
@@ -3236,14 +3295,35 @@
 
 
 {% block js %}
-    <script type="text/javascript" src="/static/assets/js/bootstrap-datepicker.min.js"></script>
-    <script type="text/javascript" src="/static/assets/js/bootstrap-datepicker.ar.min.js"></script>
+    <script nonce="trv5tth15" type="text/javascript" src="/static/assets/js/bootstrap-datepicker.min.js"></script>
+    <script nonce="trv5tth15" type="text/javascript" src="/static/assets/js/bootstrap-datepicker.ar.min.js"></script>
 
-    <script src="/static/assets/js/index.js"></script>
+    <script nonce="trv5tth15" src="/static/assets/js/index.js"></script>
+
+    <script nonce="trv5tth15" type="text/javascript">
+
+             document.getElementById("EmployeeInf").addEventListener("click", function() {
+	         openCity(event, '1');
+             });
+
+             document.getElementById("Deduction").addEventListener("click", function() {
+	         openCity(event, '2');
+             });
+
+             document.getElementById("Allowance").addEventListener("click", function() {
+	         openCity(event, '3');
+             });
+
+             document.getElementById("Overtime").addEventListener("click", function() {
+	         openCity(event, '4');
+             });
+
+    </script>
 
 
-    <script type="text/javascript">
+    <script nonce="trv5tth15" type="text/javascript">
         //Tabs script \\
+
         function openCity(evt, cityName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");
@@ -3328,10 +3408,10 @@
 
     </script>
 
-    <script src="/static/assets/js/index.js"></script>
+    <script nonce="trv5tth15" src="/static/assets/js/index.js"></script>
 
-    <script type="text/javascript">
-        // this section to show uplode file based on radio button
+    <script nonce="trv5tth15" type="text/javascript">
+        // this section to show upload file based on radio button
         $(document).ready(function () {
             $('input[type="radio"]').click(function () {
                 var inputValue = $(this).attr("value");
@@ -3348,7 +3428,7 @@
     </script>
 
 
-    <script>
+    <script nonce="trv5tth15" >
         $('#myFormId').validate({
             ignore: ".hidden"
         });
@@ -3356,13 +3436,13 @@
 
     </script>
 
-    <script>
+    <script nonce="trv5tth15" >
         let modal = new bootstrap.Modal(document.querySelector('#ModalCenter1'), {backdrop: 'static', keyboard: false});
         modal.toggle();
 
     </script>
 
-    <script>
+    <script nonce="trv5tth15">
         let modal2 = new bootstrap.Modal(document.querySelector('#ModalCenter2'), {
             backdrop: 'static',
             keyboard: false
@@ -3371,7 +3451,7 @@
 
     </script>
 
-    <script>
+    <script nonce="trv5tth15">
         let modal3 = new bootstrap.Modal(document.querySelector('#ModalCenter3'), {
             backdrop: 'static',
             keyboard: false
@@ -3380,7 +3460,7 @@
 
     </script>
 
-    <script>
+    <script nonce="trv5tth15">
         $(document).ready(function () {
             $('.js-multiple').select2();
             $("#loadImgDate").hide();
@@ -3389,7 +3469,7 @@
 
 
     <!--    This script tow show loading image once click on start auditing button -->
-    <script>
+    <script nonce="trv5tth15">
         function Start_Auditing() {
             document.querySelector('#GenerateReport').disabled = true;
             document.querySelector('#UploadMaster').disabled = true;
@@ -3400,7 +3480,7 @@
     </script>
 
 
-    <script>
+    <script nonce="trv5tth15">
         $("#selectAllemployeeinfo").click(function () {
             $(".infoCheckbox").prop("checked", $(this).prop("checked"));
         });

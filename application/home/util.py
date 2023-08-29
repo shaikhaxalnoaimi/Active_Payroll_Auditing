@@ -29,6 +29,7 @@ import pandas as pd
 from flask_login import current_user
 from flask import session
 from application.home.file_processing import get_uploads_folder, generate_file_name, InitialValidatFile, Initial_Formating
+import ntpath
 
 
 def dataframe_allowing_duplicate_headers(dataframe):
@@ -616,15 +617,24 @@ def GetFileName(folderName):
     folderName = folderName
     path = get_uploads_folder(folderName)
     os.chdir(path)
-    full_paths = []
+    file_names = []
     # print(files)
     files = [i for i in glob.glob('*.{}'.format(extension))]
     for file in files:
         path = str(path).replace(os.path.sep, '/')
         full_path = str(path) + '/' + str(file)
-        full_paths.append(full_path)
+        filename = GetFilenameOnly(full_path)
+        file_names.append(filename)
 
-    return full_paths, files
+    return file_names, files
+
+
+######################################################################################-->
+##################### Get Filename from Path ####################################-->
+######################################################################################-->
+def GetFilenameOnly(path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
 
 
 ######################################################################################-->
