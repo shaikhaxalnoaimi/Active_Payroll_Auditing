@@ -1,4 +1,4 @@
-""""
+"""
 Filename: app.py
 
 Purpose: This file is the main entry point for the Flask application. It creates the Flask app, initializes the database, sets up security headers, and runs the app.
